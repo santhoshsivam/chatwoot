@@ -143,10 +143,10 @@ export default {
           conversationId: this.conversationId,
           messageId: this.messageId,
         });
-        useAlert(this.$t('CONVERSATION.SUCCESS_DELETE_MESSAGE'));
+        useAlert(this.$t('CONVERSATION.SUCCESS_ARCHIVE_MESSAGE'));
         this.handleClose();
       } catch (error) {
-        useAlert(this.$t('CONVERSATION.FAIL_DELETE_MESSSAGE'));
+        useAlert(this.$t('CONVERSATION.FAIL_ARCHIVE_MESSAGE'));
       }
     },
     closeDeleteModal() {
@@ -248,7 +248,7 @@ export default {
           v-if="enabledOptions['delete']"
           :option="{
             icon: 'delete',
-            label: $t('CONVERSATION.CONTEXT_MENU.DELETE'),
+            label: $t('CONVERSATION.CONTEXT_MENU.ARCHIVE'),
           }"
           variant="icon"
           @click.stop="openDeleteModal"

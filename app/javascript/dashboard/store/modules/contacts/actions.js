@@ -199,6 +199,27 @@ export const actions = {
     }
   },
 
+  archive: async ({ commit }, id) => {
+    commit(types.SET_CONTACT_UI_FLAG, { isDeleting: true });
+    try {
+      await ContactAPI.archive(id);
+      commit(types.DELETE_CONTACT, id);
+      commit(types.SET_CONTACT_UI_FLAG, { isDeleting: false });
+    } catch (error) {
+      commit(types.SET_CONTACT_UI_FLAG, { isDeleting: false });
+      throw new Error(error);
+    }
+  },
+
+  restore: async ({ dispatch }, id) => {
+    try {
+      await ContactAPI.restore(id);
+      dispatch('get');
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
   deleteCustomAttributes: async ({ commit }, { id, customAttributes }) => {
     try {
       const response = await ContactAPI.destroyCustomAttributes(

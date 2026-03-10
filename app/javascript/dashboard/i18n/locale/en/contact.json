@@ -65,17 +65,23 @@
   },
   "DELETE_CONTACT": {
     "BUTTON_LABEL": "Delete Contact",
+    "BUTTON_LABEL_ARCHIVE": "Archive Contact",
     "TITLE": "Delete contact",
     "DESC": "Delete contact details",
     "CONFIRM": {
       "TITLE": "Confirm Deletion",
+      "TITLE_ARCHIVE": "Confirm Archive",
       "MESSAGE": "Are you sure to delete ",
+      "MESSAGE_ARCHIVE": "Are you sure to archive ",
       "YES": "Yes, Delete",
+      "YES_ARCHIVE": "Yes, Archive",
       "NO": "No, Keep"
     },
     "API": {
       "SUCCESS_MESSAGE": "Contact deleted successfully",
-      "ERROR_MESSAGE": "Could not delete contact. Please try again later."
+      "SUCCESS_MESSAGE_ARCHIVE": "Contact archived successfully",
+      "ERROR_MESSAGE": "Could not delete contact. Please try again later.",
+      "ERROR_MESSAGE_ARCHIVE": "Could not archive contact. Please try again later."
     }
   },
   "CONTACT_FORM": {

@@ -64,6 +64,8 @@
     "UNSUPPORTED_MESSAGE_TIKTOK": "This message is unsupported. You can view this message on the TikTok app.",
     "SUCCESS_DELETE_MESSAGE": "Message deleted successfully",
     "FAIL_DELETE_MESSSAGE": "Couldn't delete message! Try again",
+    "SUCCESS_ARCHIVE_MESSAGE": "Message archived successfully",
+    "FAIL_ARCHIVE_MESSAGE": "Couldn't archive message! Try again",
     "NO_RESPONSE": "No response",
     "RESPONSE": "Response",
     "RATING_TITLE": "Rating",
@@ -255,6 +257,8 @@
     "CHANGE_TEAM": "Conversation team changed",
     "SUCCESS_DELETE_CONVERSATION": "Conversation deleted successfully",
     "FAIL_DELETE_CONVERSATION": "Couldn't delete conversation! Try again",
+    "SUCCESS_ARCHIVE_CONVERSATION": "Conversation archived successfully",
+    "FAIL_ARCHIVE_CONVERSATION": "Couldn't archive conversation! Try again",
     "FILE_SIZE_LIMIT": "File exceeds the {MAXIMUM_SUPPORTED_FILE_UPLOAD_SIZE} MB attachment limit",
     "FILE_TYPE_NOT_SUPPORTED": "This {fileName} file type is not supported in this conversation",
     "MESSAGE_ERROR": "Unable to send this message, please try again later",
@@ -273,6 +277,7 @@
       "COPY": "Copy",
       "REPLY_TO": "Reply to this message",
       "DELETE": "Delete",
+      "ARCHIVE": "Archive",
       "CREATE_A_CANNED_RESPONSE": "Add to canned responses",
       "TRANSLATE": "Translate",
       "COPY_PERMALINK": "Copy link to the message",
@@ -281,6 +286,12 @@
         "TITLE": "Are you sure you want to delete this message?",
         "MESSAGE": "You cannot undo this action",
         "DELETE": "Delete",
+        "CANCEL": "Cancel"
+      },
+      "ARCHIVE_CONFIRMATION": {
+        "TITLE": "Are you sure you want to archive this message?",
+        "MESSAGE": "You can restore it later",
+        "ARCHIVE": "Archive",
         "CANCEL": "Cancel"
       }
     },

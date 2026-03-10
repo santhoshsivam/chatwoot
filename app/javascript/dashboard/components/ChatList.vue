@@ -809,15 +809,15 @@ onMounted(() => {
 const deleteConversationDialogRef = ref(null);
 const selectedConversationId = ref(null);
 
-async function deleteConversation() {
+async function archiveConversation() {
   try {
-    await store.dispatch('deleteConversation', selectedConversationId.value);
+    await store.dispatch('archiveConversation', selectedConversationId.value);
     redirectToConversationList();
     selectedConversationId.value = null;
     deleteConversationDialogRef.value.close();
-    useAlert(t('CONVERSATION.SUCCESS_DELETE_CONVERSATION'));
+    useAlert(t('CONVERSATION.SUCCESS_ARCHIVE_CONVERSATION'));
   } catch (error) {
-    useAlert(t('CONVERSATION.FAIL_DELETE_CONVERSATION'));
+    useAlert(t('CONVERSATION.FAIL_ARCHIVE_CONVERSATION'));
   }
 }
 
@@ -987,13 +987,13 @@ watch(conversationFilters, (newVal, oldVal) => {
       ref="deleteConversationDialogRef"
       type="alert"
       :title="
-        $t('CONVERSATION.DELETE_CONVERSATION.TITLE', {
+        $t('CONVERSATION.ARCHIVE_CONVERSATION.TITLE', {
           conversationId: selectedConversationId,
         })
       "
-      :description="$t('CONVERSATION.DELETE_CONVERSATION.DESCRIPTION')"
-      :confirm-button-label="$t('CONVERSATION.DELETE_CONVERSATION.CONFIRM')"
-      @confirm="deleteConversation"
+      :description="$t('CONVERSATION.ARCHIVE_CONVERSATION.DESCRIPTION')"
+      :confirm-button-label="$t('CONVERSATION.ARCHIVE_CONVERSATION.CONFIRM')"
+      @confirm="archiveConversation"
       @close="selectedConversationId = null"
     />
     <TeleportWithDirection

@@ -124,7 +124,7 @@ export default {
       this.showDeleteModal = !this.showDeleteModal;
     },
     confirmDeletion() {
-      this.deleteContact(this.contact);
+      this.archiveContact(this.contact);
       this.closeDelete();
     },
     closeDelete() {
@@ -143,11 +143,11 @@ export default {
         return '';
       }
     },
-    async deleteContact({ id }) {
+    async archiveContact({ id }) {
       try {
-        await this.$store.dispatch('contacts/delete', id);
+        await this.$store.dispatch('contacts/archive', id);
         this.$emit('panelClose');
-        useAlert(this.$t('DELETE_CONTACT.API.SUCCESS_MESSAGE'));
+        useAlert(this.$t('DELETE_CONTACT.API.SUCCESS_MESSAGE_ARCHIVE'));
 
         if (isAConversationRoute(this.$route.name)) {
           this.$router.push({
@@ -308,8 +308,8 @@ export default {
         />
         <NextButton
           v-if="isAdmin"
-          v-tooltip.top-end="$t('DELETE_CONTACT.BUTTON_LABEL')"
-          icon="i-ph-trash"
+          v-tooltip.top-end="$t('DELETE_CONTACT.BUTTON_LABEL_ARCHIVE')"
+          icon="i-ph-archive"
           slate
           faded
           sm
@@ -331,10 +331,10 @@ export default {
       v-model:show="showDeleteModal"
       :on-close="closeDelete"
       :on-confirm="confirmDeletion"
-      :title="$t('DELETE_CONTACT.CONFIRM.TITLE')"
-      :message="$t('DELETE_CONTACT.CONFIRM.MESSAGE')"
+      :title="$t('DELETE_CONTACT.CONFIRM.TITLE_ARCHIVE')"
+      :message="$t('DELETE_CONTACT.CONFIRM.MESSAGE_ARCHIVE')"
       :message-value="confirmDeleteMessage"
-      :confirm-text="$t('DELETE_CONTACT.CONFIRM.YES')"
+      :confirm-text="$t('DELETE_CONTACT.CONFIRM.YES_ARCHIVE')"
       :reject-text="$t('DELETE_CONTACT.CONFIRM.NO')"
     />
   </div>
