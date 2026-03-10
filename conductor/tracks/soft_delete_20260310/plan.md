@@ -1,11 +1,11 @@
 # Implementation Plan: Implement Soft Delete
 
 ## Phase 1: Database and Model Layer (Expanded)
-- [ ] Task: Setup `discard` gem and create migrations for target models
-    - [ ] Add `discard` gem to `Gemfile`
-    - [ ] Run `bundle install`
-    - [ ] Create migrations to add `discarded_at` to: `accounts`, `users`, `conversations`, `messages`, `contacts`, `inboxes`, `canned_responses`, `automation_rules`, `macros`, `articles`
-    - [ ] Run migrations
+- [x] Task: Setup `discard` gem and create migrations for target models (94e5c07)
+    - [x] Add `discard` gem to `Gemfile`
+    - [x] Run `bundle install`
+    - [x] Create migrations to add `discarded_at` to: `accounts`, `users`, `conversations`, `messages`, `contacts`, `inboxes`, `canned_responses`, `automation_rules`, `macros`, `articles`
+    - [x] Run migrations
 - [ ] Task: Update Models to support soft delete
     - [ ] Include `Discard::Model` in all target models
     - [ ] Update associations to handle cascading soft deletes where appropriate (e.g., `Account` -> `Inboxes`)
