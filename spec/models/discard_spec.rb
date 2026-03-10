@@ -25,6 +25,17 @@ RSpec.describe 'Soft Delete (Discard)', type: :model do
       expect(model.discarded_at).not_to be_nil
       expect(model.discarded?).to be true
     end
+
+    it "excludes discarded #{factory_name} from default scope" do
+      model = if factory_name == :account
+                account
+              else
+                create(factory_name, account: account)
+              end
+      model.discard
+      expect(model.class.all).not_to include(model)
+      expect(model.class.with_discarded).to include(model)
+    end
   end
 
   context 'with Transactional Models' do

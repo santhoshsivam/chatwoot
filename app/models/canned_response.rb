@@ -12,6 +12,7 @@
 
 class CannedResponse < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   validates :content, presence: true
   validates :short_code, presence: true
   validates :account, presence: true

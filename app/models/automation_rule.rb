@@ -19,6 +19,7 @@
 #
 class AutomationRule < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   include Rails.application.routes.url_helpers
   include Reauthorizable
 

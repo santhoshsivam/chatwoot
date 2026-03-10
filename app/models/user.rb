@@ -47,6 +47,7 @@
 
 class User < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   include AccessTokenable
   include Avatarable
   # Include default devise modules.

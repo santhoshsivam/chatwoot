@@ -24,6 +24,7 @@
 
 class Account < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   # used for single column multi flags
   include FlagShihTzu
   include Reportable

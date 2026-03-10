@@ -53,6 +53,7 @@
 
 class Conversation < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   include Labelable
   include LlmFormattable
   include AssignmentHandler

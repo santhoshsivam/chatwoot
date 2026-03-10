@@ -18,6 +18,7 @@
 #
 class Macro < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   include Rails.application.routes.url_helpers
 
   belongs_to :account

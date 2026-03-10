@@ -41,6 +41,7 @@
 
 class Inbox < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   include Reportable
   include Avatarable
   include OutOfOffisable

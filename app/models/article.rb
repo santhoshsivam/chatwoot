@@ -33,6 +33,7 @@
 #
 class Article < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   include PgSearch::Model
   include LlmFormattable
 

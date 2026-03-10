@@ -43,6 +43,7 @@
 
 class Contact < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   include Avatarable
   include AvailabilityStatusable
   include Labelable

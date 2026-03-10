@@ -40,6 +40,7 @@
 
 class Message < ApplicationRecord
   include Discard::Model
+  default_scope { kept }
   searchkick callbacks: false if ChatwootApp.advanced_search_allowed?
 
   include MessageFilterHelpers
