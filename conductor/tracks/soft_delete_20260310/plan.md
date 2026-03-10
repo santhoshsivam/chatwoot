@@ -1,6 +1,6 @@
 # Implementation Plan: Implement Soft Delete
 
-## Phase 1: Database and Model Layer (Expanded)
+## Phase 1: Database and Model Layer (Expanded) [checkpoint: 90cf3c4]
 - [x] Task: Setup `discard` gem and create migrations for target models (94e5c07)
     - [x] Add `discard` gem to `Gemfile`
     - [x] Run `bundle install`
@@ -10,7 +10,7 @@
     - [x] Include `Discard::Model` in all target models
     - [x] Update associations to handle cascading soft deletes where appropriate (e.g., `Account` -> `Inboxes`)
     - [x] Migrate existing `Message` soft delete logic (using the `deleted` attribute) to use the `discard` pattern
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Database and Model Layer (Expanded)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Database and Model Layer (Expanded)' (Protocol in workflow.md)
 
 ## Phase 2: API and Controller Layer
 - [ ] Task: Update API endpoints for archiving and restoring core entities
