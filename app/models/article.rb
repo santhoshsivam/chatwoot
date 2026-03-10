@@ -32,6 +32,7 @@
 #  index_articles_on_views                  (views)
 #
 class Article < ApplicationRecord
+  include Discard::Model
   include PgSearch::Model
   include LlmFormattable
 

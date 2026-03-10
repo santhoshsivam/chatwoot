@@ -46,6 +46,7 @@
 #
 
 class User < ApplicationRecord
+  include Discard::Model
   include AccessTokenable
   include Avatarable
   # Include default devise modules.

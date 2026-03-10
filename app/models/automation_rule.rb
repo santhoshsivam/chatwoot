@@ -18,6 +18,7 @@
 #  index_automation_rules_on_account_id  (account_id)
 #
 class AutomationRule < ApplicationRecord
+  include Discard::Model
   include Rails.application.routes.url_helpers
   include Reauthorizable
 

@@ -42,6 +42,7 @@
 # rubocop:enable Layout/LineLength
 
 class Contact < ApplicationRecord
+  include Discard::Model
   include Avatarable
   include AvailabilityStatusable
   include Labelable

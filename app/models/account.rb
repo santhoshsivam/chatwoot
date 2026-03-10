@@ -23,6 +23,7 @@
 #
 
 class Account < ApplicationRecord
+  include Discard::Model
   # used for single column multi flags
   include FlagShihTzu
   include Reportable
@@ -141,6 +142,8 @@ class Account < ApplicationRecord
   enum :locale, LANGUAGES_CONFIG.map { |key, val| [val[:iso_639_1_code], key] }.to_h, prefix: true
   enum :status, { active: 0, suspended: 1 }
 
+  after_discard :discard_associations
+
   scope :with_auto_resolve, -> { where("(settings ->> 'auto_resolve_after')::int IS NOT NULL") }
 
   before_validation :validate_limit_keys
@@ -197,6 +200,16 @@ class Account < ApplicationRecord
   end
 
   private
+
+  def discard_associations
+    inboxes.discard_all
+    conversations.discard_all
+    contacts.discard_all
+    canned_responses.discard_all
+    automation_rules.discard_all
+    macros.discard_all
+    articles.discard_all
+  end
 
   def notify_creation
     Rails.configuration.dispatcher.dispatch(ACCOUNT_CREATED, Time.zone.now, account: self)

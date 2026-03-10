@@ -40,6 +40,7 @@
 #
 
 class Inbox < ApplicationRecord
+  include Discard::Model
   include Reportable
   include Avatarable
   include OutOfOffisable

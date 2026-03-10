@@ -52,6 +52,7 @@
 #
 
 class Conversation < ApplicationRecord
+  include Discard::Model
   include Labelable
   include LlmFormattable
   include AssignmentHandler
