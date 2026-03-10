@@ -11,6 +11,14 @@ class ConversationPolicy < ApplicationPolicy
     administrator? || agent_bot? || agent_can_view_conversation?
   end
 
+  def archive?
+    show?
+  end
+
+  def restore?
+    show?
+  end
+
   private
 
   def agent_can_view_conversation?

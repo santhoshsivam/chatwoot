@@ -109,6 +109,18 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
     head :ok
   end
 
+  def archive
+    authorize @contact, :archive?
+    @contact.discard
+    head :ok
+  end
+
+  def restore
+    authorize @contact, :restore?
+    @contact.undiscard
+    head :ok
+  end
+
   def avatar
     @contact.avatar.purge if @contact.avatar.attached?
     @contact
@@ -201,7 +213,7 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
   end
 
   def fetch_contact
-    @contact = Current.account.contacts.includes(contact_inboxes: [:inbox]).find(params[:id])
+    @contact = Current.account.contacts.with_discarded.includes(contact_inboxes: [:inbox]).find(params[:id])
   end
 
   def process_avatar_from_url

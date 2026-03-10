@@ -45,6 +45,18 @@ class Api::V1::Accounts::AutomationRulesController < Api::V1::Accounts::BaseCont
     head :ok
   end
 
+  def archive
+    authorize @automation_rule, :update?
+    @automation_rule.discard
+    head :ok
+  end
+
+  def restore
+    authorize @automation_rule, :update?
+    @automation_rule.undiscard
+    head :ok
+  end
+
   def clone
     automation_rule = Current.account.automation_rules.find_by(id: params[:automation_rule_id])
     new_rule = automation_rule.dup
@@ -63,6 +75,6 @@ class Api::V1::Accounts::AutomationRulesController < Api::V1::Accounts::BaseCont
   end
 
   def fetch_automation_rule
-    @automation_rule = Current.account.automation_rules.find_by(id: params[:id])
+    @automation_rule = Current.account.automation_rules.with_discarded.find_by(id: params[:id])
   end
 end

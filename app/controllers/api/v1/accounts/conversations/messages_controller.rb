@@ -19,10 +19,21 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
   end
 
   def destroy
+    archive
+  end
+
+  def archive
     ActiveRecord::Base.transaction do
-      message.update!(content: I18n.t('conversations.messages.deleted'), content_type: :text, content_attributes: { deleted: true })
+      message.update!(content: I18n.t('conversations.messages.deleted'), content_type: :text)
+      message.discard
       message.attachments.destroy_all
     end
+    head :ok
+  end
+
+  def restore
+    message.undiscard
+    head :ok
   end
 
   def retry
@@ -57,7 +68,7 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
   private
 
   def message
-    @message ||= @conversation.messages.find(permitted_params[:id])
+    @message ||= @conversation.messages.with_discarded.find(permitted_params[:id])
   end
 
   def message_finder

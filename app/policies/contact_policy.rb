@@ -47,6 +47,14 @@ class ContactPolicy < ApplicationPolicy
     true
   end
 
+  def archive?
+    @account_user.administrator? || @account_user.agent?
+  end
+
+  def restore?
+    @account_user.administrator?
+  end
+
   def destroy?
     @account_user.administrator?
   end

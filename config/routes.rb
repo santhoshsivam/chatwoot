@@ -102,11 +102,24 @@ Rails.application.routes.draw do
               post :reauthorize_page
             end
           end
-          resources :canned_responses, only: [:index, :create, :update, :destroy]
+          resources :canned_responses, only: [:index, :create, :update, :destroy] do
+            member do
+              post :archive
+              post :restore
+            end
+          end
           resources :automation_rules, only: [:index, :create, :show, :update, :destroy] do
+            member do
+              post :archive
+              post :restore
+            end
             post :clone
           end
           resources :macros, only: [:index, :create, :show, :update, :destroy] do
+            member do
+              post :archive
+              post :restore
+            end
             post :execute, on: :member
           end
           resources :sla_policies, only: [:index, :create, :show, :update, :destroy]
@@ -133,6 +146,8 @@ Rails.application.routes.draw do
                 member do
                   post :translate
                   post :retry
+                  post :archive
+                  post :restore
                 end
               end
               resources :assignments, only: [:create]
@@ -146,6 +161,8 @@ Rails.application.routes.draw do
               post :unmute
               post :transcript
               post :toggle_status
+              post :archive
+              post :restore
               post :toggle_priority
               post :toggle_typing_status
               post :update_last_seen
@@ -182,6 +199,8 @@ Rails.application.routes.draw do
             member do
               get :contactable_inboxes
               post :destroy_custom_attributes
+              post :archive
+              post :restore
               delete :avatar
             end
             scope module: :contacts do
@@ -211,6 +230,10 @@ Rails.application.routes.draw do
           resources :custom_attribute_definitions, only: [:index, :show, :create, :update, :destroy]
           resources :custom_filters, only: [:index, :show, :create, :update, :destroy]
           resources :inboxes, only: [:index, :show, :create, :update, :destroy] do
+            member do
+              post :archive
+              post :restore
+            end
             get :assignable_agents, on: :member
             get :campaigns, on: :member
             get :agent_bot, on: :member
@@ -352,6 +375,10 @@ Rails.application.routes.draw do
               post :reorder, on: :collection
             end
             resources :articles do
+              member do
+                post :archive
+                post :restore
+              end
               post :reorder, on: :collection
             end
           end

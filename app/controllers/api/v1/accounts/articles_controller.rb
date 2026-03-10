@@ -39,6 +39,18 @@ class Api::V1::Accounts::ArticlesController < Api::V1::Accounts::BaseController
     head :ok
   end
 
+  def archive
+    authorize @article, :update?
+    @article.discard
+    head :ok
+  end
+
+  def restore
+    authorize @article, :update?
+    @article.undiscard
+    head :ok
+  end
+
   def reorder
     Article.update_positions(portal: @portal, positions_hash: params[:positions_hash])
     head :ok
@@ -60,7 +72,7 @@ class Api::V1::Accounts::ArticlesController < Api::V1::Accounts::BaseController
   end
 
   def fetch_article
-    @article = @portal.articles.find(params[:id])
+    @article = @portal.articles.with_discarded.find(params[:id])
   end
 
   def portal

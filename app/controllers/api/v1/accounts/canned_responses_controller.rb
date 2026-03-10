@@ -1,5 +1,5 @@
 class Api::V1::Accounts::CannedResponsesController < Api::V1::Accounts::BaseController
-  before_action :fetch_canned_response, only: [:update, :destroy]
+  before_action :fetch_canned_response, only: [:update, :destroy, :archive, :restore]
 
   def index
     render json: canned_responses
@@ -21,10 +21,20 @@ class Api::V1::Accounts::CannedResponsesController < Api::V1::Accounts::BaseCont
     head :ok
   end
 
+  def archive
+    @canned_response.discard
+    head :ok
+  end
+
+  def restore
+    @canned_response.undiscard
+    head :ok
+  end
+
   private
 
   def fetch_canned_response
-    @canned_response = Current.account.canned_responses.find(params[:id])
+    @canned_response = Current.account.canned_responses.with_discarded.find(params[:id])
   end
 
   def canned_response_params

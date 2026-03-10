@@ -47,6 +47,18 @@ class Api::V1::Accounts::MacrosController < Api::V1::Accounts::BaseController
     head :ok
   end
 
+  def archive
+    authorize @macro, :update?
+    @macro.discard
+    head :ok
+  end
+
+  def restore
+    authorize @macro, :update?
+    @macro.undiscard
+    head :ok
+  end
+
   def execute
     ::MacrosExecutionJob.perform_later(@macro, conversation_ids: params[:conversation_ids], user: Current.user)
 
@@ -67,7 +79,7 @@ class Api::V1::Accounts::MacrosController < Api::V1::Accounts::BaseController
   end
 
   def fetch_macro
-    @macro = Current.account.macros.find_by(id: params[:id])
+    @macro = Current.account.macros.with_discarded.find_by(id: params[:id])
   end
 
   def check_authorization

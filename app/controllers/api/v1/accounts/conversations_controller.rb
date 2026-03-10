@@ -91,6 +91,18 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     assign_conversation if should_assign_conversation?
   end
 
+  def archive
+    authorize @conversation, :archive?
+    @conversation.discard
+    head :ok
+  end
+
+  def restore
+    authorize @conversation, :restore?
+    @conversation.undiscard
+    head :ok
+  end
+
   def pending_to_open_by_bot?
     return false unless Current.user.is_a?(AgentBot)
 
@@ -184,7 +196,7 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
   end
 
   def conversation
-    @conversation ||= Current.account.conversations.find_by!(display_id: params[:id])
+    @conversation ||= Current.account.conversations.with_discarded.find_by!(display_id: params[:id])
     authorize @conversation, :show?
   end
 

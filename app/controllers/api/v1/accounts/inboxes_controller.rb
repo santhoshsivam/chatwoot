@@ -70,6 +70,18 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
     render status: :ok, json: { message: I18n.t('messages.inbox_deletetion_response') }
   end
 
+  def archive
+    authorize @inbox, :update?
+    @inbox.discard
+    head :ok
+  end
+
+  def restore
+    authorize @inbox, :update?
+    @inbox.undiscard
+    head :ok
+  end
+
   def sync_templates
     return render status: :unprocessable_entity, json: { error: 'Template sync is only available for WhatsApp channels' } unless whatsapp_channel?
 
@@ -90,7 +102,7 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
   private
 
   def fetch_inbox
-    @inbox = Current.account.inboxes.find(params[:id])
+    @inbox = Current.account.inboxes.with_discarded.find(params[:id])
     authorize @inbox, :show?
   end
 
