@@ -6,10 +6,10 @@
     - [x] Run `bundle install`
     - [x] Create migrations to add `discarded_at` to: `accounts`, `users`, `conversations`, `messages`, `contacts`, `inboxes`, `canned_responses`, `automation_rules`, `macros`, `articles`
     - [x] Run migrations
-- [ ] Task: Update Models to support soft delete
-    - [ ] Include `Discard::Model` in all target models
-    - [ ] Update associations to handle cascading soft deletes where appropriate (e.g., `Account` -> `Inboxes`)
-    - [ ] Migrate existing `Message` soft delete logic (using the `deleted` attribute) to use the `discard` pattern
+- [x] Task: Update Models to support soft delete (4d5d939)
+    - [x] Include `Discard::Model` in all target models
+    - [x] Update associations to handle cascading soft deletes where appropriate (e.g., `Account` -> `Inboxes`)
+    - [x] Migrate existing `Message` soft delete logic (using the `deleted` attribute) to use the `discard` pattern
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Database and Model Layer (Expanded)' (Protocol in workflow.md)
 
 ## Phase 2: API and Controller Layer
