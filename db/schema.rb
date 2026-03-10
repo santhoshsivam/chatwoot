@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_10_095225) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -73,6 +73,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.integer "status", default: 0
     t.jsonb "internal_attributes", default: {}, null: false
     t.jsonb "settings", default: {}
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_accounts_on_discarded_at"
     t.index ["status"], name: "index_accounts_on_status"
   end
 
@@ -184,9 +186,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.string "slug", null: false
     t.integer "position"
     t.string "locale", default: "en", null: false
+    t.datetime "discarded_at"
     t.index ["account_id"], name: "index_articles_on_account_id"
     t.index ["associated_article_id"], name: "index_articles_on_associated_article_id"
     t.index ["author_id"], name: "index_articles_on_author_id"
+    t.index ["discarded_at"], name: "index_articles_on_discarded_at"
     t.index ["portal_id"], name: "index_articles_on_portal_id"
     t.index ["slug"], name: "index_articles_on_slug", unique: true
     t.index ["status"], name: "index_articles_on_status"
@@ -257,7 +261,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true, null: false
+    t.datetime "discarded_at"
     t.index ["account_id"], name: "index_automation_rules_on_account_id"
+    t.index ["discarded_at"], name: "index_automation_rules_on_discarded_at"
   end
 
   create_table "campaigns", force: :cascade do |t|
@@ -291,6 +297,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.text "content"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_canned_responses_on_discarded_at"
   end
 
   create_table "captain_assistant_responses", force: :cascade do |t|
@@ -628,6 +636,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.string "country_code", default: ""
     t.boolean "blocked", default: false, null: false
     t.bigint "company_id"
+    t.datetime "discarded_at"
     t.index "lower((email)::text), account_id", name: "index_contacts_on_lower_email_account_id"
     t.index ["account_id", "contact_type"], name: "index_contacts_on_account_id_and_contact_type"
     t.index ["account_id", "email", "phone_number", "identifier"], name: "index_contacts_on_nonempty_fields", where: "(((email)::text <> ''::text) OR ((phone_number)::text <> ''::text) OR ((identifier)::text <> ''::text))"
@@ -636,6 +645,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.index ["account_id"], name: "index_resolved_contact_account_id", where: "(((email)::text <> ''::text) OR ((phone_number)::text <> ''::text) OR ((identifier)::text <> ''::text))"
     t.index ["blocked"], name: "index_contacts_on_blocked"
     t.index ["company_id"], name: "index_contacts_on_company_id"
+    t.index ["discarded_at"], name: "index_contacts_on_discarded_at"
     t.index ["email", "account_id"], name: "uniq_email_per_account_contact", unique: true
     t.index ["identifier", "account_id"], name: "uniq_identifier_per_account_contact", unique: true
     t.index ["name", "email", "phone_number", "identifier"], name: "index_contacts_on_name_email_phone_number_identifier", opclass: :gin_trgm_ops, using: :gin
@@ -681,6 +691,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.datetime "waiting_since"
     t.text "cached_label_list"
     t.bigint "assignee_agent_bot_id"
+    t.datetime "discarded_at"
     t.index ["account_id", "display_id"], name: "index_conversations_on_account_id_and_display_id", unique: true
     t.index ["account_id", "id"], name: "index_conversations_on_id_and_account_id"
     t.index ["account_id", "inbox_id", "status", "assignee_id"], name: "conv_acid_inbid_stat_asgnid_idx"
@@ -689,6 +700,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.index ["campaign_id"], name: "index_conversations_on_campaign_id"
     t.index ["contact_id"], name: "index_conversations_on_contact_id"
     t.index ["contact_inbox_id"], name: "index_conversations_on_contact_inbox_id"
+    t.index ["discarded_at"], name: "index_conversations_on_discarded_at"
     t.index ["first_reply_created_at"], name: "index_conversations_on_first_reply_created_at"
     t.index ["identifier", "account_id"], name: "index_conversations_on_identifier_and_account_id"
     t.index ["inbox_id"], name: "index_conversations_on_inbox_id"
@@ -877,8 +889,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.integer "sender_name_type", default: 0, null: false
     t.string "business_name"
     t.jsonb "csat_config", default: {}, null: false
+    t.datetime "discarded_at"
     t.index ["account_id"], name: "index_inboxes_on_account_id"
     t.index ["channel_id", "channel_type"], name: "index_inboxes_on_channel_id_and_channel_type"
+    t.index ["discarded_at"], name: "index_inboxes_on_discarded_at"
     t.index ["portal_id"], name: "index_inboxes_on_portal_id"
   end
 
@@ -944,7 +958,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.jsonb "actions", default: {}, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.datetime "discarded_at"
     t.index ["account_id"], name: "index_macros_on_account_id"
+    t.index ["discarded_at"], name: "index_macros_on_discarded_at"
   end
 
   create_table "mentions", force: :cascade do |t|
@@ -979,6 +995,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.jsonb "additional_attributes", default: {}
     t.text "processed_message_content"
     t.jsonb "sentiment", default: {}
+    t.datetime "discarded_at"
     t.index "((additional_attributes -> 'campaign_id'::text))", name: "index_messages_on_additional_attributes_campaign_id", using: :gin
     t.index ["account_id", "content_type", "created_at"], name: "idx_messages_account_content_created"
     t.index ["account_id", "created_at", "message_type"], name: "index_messages_on_account_created_type"
@@ -988,6 +1005,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.index ["conversation_id", "account_id", "message_type", "created_at"], name: "index_messages_on_conversation_account_type_created"
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["created_at"], name: "index_messages_on_created_at"
+    t.index ["discarded_at"], name: "index_messages_on_discarded_at"
     t.index ["inbox_id"], name: "index_messages_on_inbox_id"
     t.index ["sender_type", "sender_id"], name: "index_messages_on_sender_type_and_sender_id"
     t.index ["source_id"], name: "index_messages_on_source_id"
@@ -1233,6 +1251,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_26_153427) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login", default: false, null: false
     t.text "otp_backup_codes"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email"
     t.index ["otp_required_for_login"], name: "index_users_on_otp_required_for_login"
     t.index ["otp_secret"], name: "index_users_on_otp_secret", unique: true

@@ -65,6 +65,7 @@ gem 'redis'
 gem 'redis-namespace'
 # super fast record imports in bulk
 gem 'activerecord-import'
+gem 'discard', '~> 1.3'
 
 gem 'searchkick'
 gem 'opensearch-ruby'
