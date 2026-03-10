@@ -12,17 +12,17 @@
     - [x] Migrate existing `Message` soft delete logic (using the `deleted` attribute) to use the `discard` pattern
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Database and Model Layer (Expanded)' (Protocol in workflow.md)
 
-## Phase 2: API and Controller Layer
-- [ ] Task: Update API endpoints for archiving and restoring core entities
-    - [ ] Add `archive` and `restore` endpoints for `Conversations` and `Messages`
-    - [ ] Add `archive` and `restore` endpoints for `Contacts`
-- [ ] Task: Update API endpoints for configuration and content entities
-    - [ ] Add `archive` and `restore` endpoints for `Inboxes`
-    - [ ] Add `archive` and `restore` endpoints for `CannedResponses`, `AutomationRules`, `Macros`, and `Articles`
-- [ ] Task: Update finders and controllers to handle discarded records
-    - [ ] Ensure default finders exclude discarded records for all target models
-    - [ ] Update dashboard and inbox views to filter out discarded items
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: API and Controller Layer' (Protocol in workflow.md)
+## Phase 2: API and Controller Layer [checkpoint: 6de6124]
+- [x] Task: Update API endpoints for archiving and restoring core entities (ea70311)
+    - [x] Add `archive` and `restore` endpoints for `Conversations` and `Messages`
+    - [x] Add `archive` and `restore` endpoints for `Contacts`
+- [x] Task: Update API endpoints for configuration and content entities (ea70311)
+    - [x] Add `archive` and `restore` endpoints for `Inboxes`
+    - [x] Add `archive` and `restore` endpoints for `CannedResponses`, `AutomationRules`, `Macros`, and `Articles`
+- [x] Task: Update finders and controllers to handle discarded records (ea70311)
+    - [x] Ensure default finders exclude discarded records for all target models
+    - [x] Update dashboard and inbox views to filter out discarded items
+- [x] Task: Conductor - User Manual Verification 'Phase 2: API and Controller Layer' (Protocol in workflow.md)
 
 ## Phase 3: Frontend Implementation
 - [ ] Task: Update UI for Archive and Restore actions on Core Entities
