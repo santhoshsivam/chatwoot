@@ -25,11 +25,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: API and Controller Layer' (Protocol in workflow.md)
 
 ## Phase 3: Frontend Implementation
-- [ ] Task: Update UI for Archive and Restore actions on Core Entities
-    - [ ] Replace "Delete" with "Archive" in the Conversation sidebar
-    - [ ] Add "Archive" action to Message menu
-    - [ ] Implement "Restore" button in an "Archived" view or filter for conversations
-- [ ] Task: Update UI for Archive and Restore actions on Configuration Entities
+- [x] Task: Update UI for Archive and Restore actions on Core Entities
+    - [x] Replace "Delete" with "Archive" in the Conversation sidebar
+    - [x] Add "Archive" action to Message menu
+    - [x] Implement "Restore" button in an "Archived" view or filter for conversations
+- [~] Task: Update UI for Archive and Restore actions on Configuration Entities
     - [ ] Add "Archive" action to Inboxes management
     - [ ] Add "Archive" action to Canned Responses, Macros, and Automation Rules
     - [ ] Add "Archive" action to Articles in the Help Center
