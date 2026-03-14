@@ -20,6 +20,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Frontend Integration' (Protocol in workflow.md) (fdce08d)
 
 ## Phase 4: Final Verification
-- [~] Task: Run full test suite (RSpec & Vitest).
-- [ ] Task: Perform end-to-end manual verification of the handoff flow.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md)
+- [x] Task: Run full test suite (RSpec & Vitest).
+- [x] Task: Perform end-to-end manual verification of the handoff flow.
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (8d1d5be)
