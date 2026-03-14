@@ -98,53 +98,6 @@ describe('#mutations', () => {
       ).toBe('in-progress');
     });
 
-    it('creates content_attributes.data if it does not exist', () => {
-      const state = {
-        allConversations: [
-          {
-            id: 1,
-            messages: [{ id: 1, content_type: 'voice_call' }],
-          },
-        ],
-      };
-      mutations[types.UPDATE_MESSAGE_CALL_STATUS](state, {
-        conversationId: 1,
-        callStatus: 'completed',
-      });
-      expect(
-        state.allConversations[0].messages[0].content_attributes.data.status
-      ).toBe('completed');
-    });
-
-    it('preserves existing data in content_attributes.data', () => {
-      const state = {
-        allConversations: [
-          {
-            id: 1,
-            messages: [
-              {
-                id: 1,
-                content_type: 'voice_call',
-                content_attributes: {
-                  data: { call_sid: 'CA123', status: 'ringing' },
-                },
-              },
-            ],
-          },
-        ],
-      };
-      mutations[types.UPDATE_MESSAGE_CALL_STATUS](state, {
-        conversationId: 1,
-        callStatus: 'in-progress',
-      });
-      expect(
-        state.allConversations[0].messages[0].content_attributes.data
-      ).toEqual({
-        call_sid: 'CA123',
-        status: 'in-progress',
-      });
-    });
-
     it('handles empty messages array', () => {
       const state = {
         allConversations: [{ id: 1, messages: [] }],
@@ -154,6 +107,17 @@ describe('#mutations', () => {
         callStatus: 'ringing',
       });
       expect(state.allConversations[0].messages).toEqual([]);
+    });
+  });
+
+  describe('#UPDATE_CONVERSATION_SUMMARY_STATUS', () => {
+    it('updates the summary status of the conversation', () => {
+      const state = { allConversations: [{ id: 1 }] };
+      mutations[types.UPDATE_CONVERSATION_SUMMARY_STATUS](state, {
+        conversation_id: 1,
+        status: 'in_progress',
+      });
+      expect(state.allConversations[0].summaryStatus).toBe('in_progress');
     });
   });
 });

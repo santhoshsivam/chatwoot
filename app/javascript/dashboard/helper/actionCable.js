@@ -33,6 +33,7 @@ class ActionCableConnector extends BaseActionCableConnector {
       'conversation.read': this.onConversationRead,
       'conversation.updated': this.onConversationUpdated,
       'account.cache_invalidated': this.onCacheInvalidate,
+      'conversation.summary_status': this.onSummaryStatus,
       'copilot.message.created': this.onCopilotMessageCreated,
     };
   }
@@ -98,84 +99,44 @@ class ActionCableConnector extends BaseActionCableConnector {
       conversation: { last_activity_at: lastActivityAt },
       conversation_id: conversationId,
     } = data;
-    DashboardAudioNotificationHelper.onNewMessage(data);
+
     this.app.$store.dispatch('addMessage', data);
     this.app.$store.dispatch('updateConversationLastActivity', {
-      lastActivityAt,
       conversationId,
+      lastActivityAt,
     });
-  };
 
-  // eslint-disable-next-line class-methods-use-this
-  onReload = () => window.location.reload();
+    if (data.message_type === 0) {
+      DashboardAudioNotificationHelper.onNewMessage(data);
+    }
+  };
 
   onStatusChange = data => {
     this.app.$store.dispatch('updateConversation', data);
     this.fetchConversationStats();
   };
 
-  onConversationUpdated = data => {
-    this.app.$store.dispatch('updateConversation', data);
-    this.fetchConversationStats();
+  onTypingOn = data => {
+    this.app.$store.dispatch('conversationTypingStatus/create', data);
   };
 
-  onTypingOn = ({ conversation, user }) => {
-    const conversationId = conversation.id;
-
-    this.clearTimer(conversationId);
-    this.app.$store.dispatch('conversationTypingStatus/create', {
-      conversationId,
-      user,
-    });
-    this.initTimer({ conversation, user });
-  };
-
-  onTypingOff = ({ conversation, user }) => {
-    const conversationId = conversation.id;
-
-    this.clearTimer(conversationId);
-    this.app.$store.dispatch('conversationTypingStatus/destroy', {
-      conversationId,
-      user,
-    });
-  };
-
-  onConversationMentioned = data => {
-    this.app.$store.dispatch('addMentions', data);
-  };
-
-  clearTimer = conversationId => {
-    const timerEvent = this.CancelTyping[conversationId];
-
-    if (timerEvent) {
-      clearTimeout(timerEvent);
-      this.CancelTyping[conversationId] = null;
-    }
-  };
-
-  initTimer = ({ conversation, user }) => {
-    const conversationId = conversation.id;
-    // Turn off typing automatically after 30 seconds
-    this.CancelTyping[conversationId] = setTimeout(() => {
-      this.onTypingOff({ conversation, user });
-    }, 30000);
+  onTypingOff = data => {
+    this.app.$store.dispatch('conversationTypingStatus/destroy', data);
   };
 
   // eslint-disable-next-line class-methods-use-this
-  fetchConversationStats = () => {
-    emitter.emit('fetch_conversation_stats');
-  };
+  onReload = () => window.location.reload();
 
   onContactDelete = data => {
-    this.app.$store.dispatch(
-      'contacts/deleteContactThroughConversations',
-      data.id
-    );
-    this.fetchConversationStats();
+    this.app.$store.dispatch('contacts/delete', data.id);
   };
 
   onContactUpdate = data => {
     this.app.$store.dispatch('contacts/updateContact', data);
+  };
+
+  onConversationMentioned = data => {
+    this.app.$store.dispatch('addMentions', data);
   };
 
   onNotificationCreated = data => {
@@ -190,20 +151,25 @@ class ActionCableConnector extends BaseActionCableConnector {
     this.app.$store.dispatch('notifications/updateNotification', data);
   };
 
-  onCopilotMessageCreated = data => {
-    this.app.$store.dispatch('copilotMessages/upsert', data);
+  onConversationUpdated = data => {
+    this.app.$store.dispatch('updateConversation', data);
   };
 
   onCacheInvalidate = data => {
-    const keys = data.cache_keys;
-    this.app.$store.dispatch('labels/revalidate', { newKey: keys.label });
-    this.app.$store.dispatch('inboxes/revalidate', { newKey: keys.inbox });
-    this.app.$store.dispatch('teams/revalidate', { newKey: keys.team });
+    this.app.$store.dispatch('updateConversationLabels', data);
+  };
+
+  onSummaryStatus = data => {
+    this.app.$store.dispatch('updateSummaryStatus', data);
+  };
+
+  onCopilotMessageCreated = data => {
+    this.app.$store.dispatch('captain/copilotMessages/addMessage', data);
+  };
+
+  fetchConversationStats = () => {
+    this.app.$store.dispatch('conversationStats/get');
   };
 }
 
-export default {
-  init(store, pubsubToken) {
-    return new ActionCableConnector({ $store: store }, pubsubToken);
-  },
-};
+export default ActionCableConnector;

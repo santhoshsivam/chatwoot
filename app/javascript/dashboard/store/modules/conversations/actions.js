@@ -528,6 +528,10 @@ const actions = {
     }
   },
 
+  updateSummaryStatus: ({ commit }, data) => {
+    commit(types.UPDATE_CONVERSATION_SUMMARY_STATUS, data);
+  },
+
   ...messageReadActions,
   ...messageTranslateActions,
 };

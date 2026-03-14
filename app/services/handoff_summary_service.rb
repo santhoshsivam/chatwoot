@@ -7,10 +7,16 @@ class HandoffSummaryService
   def perform
     return unless captain_tasks_enabled?
 
+    broadcast_status('in_progress')
     summary_result = generate_summary
-    return if summary_result.nil? || summary_result[:error]
+
+    if summary_result.nil? || summary_result[:error]
+      broadcast_status('failed')
+      return
+    end
 
     create_private_note(summary_result[:message])
+    broadcast_status('completed')
   end
 
   private
@@ -34,5 +40,21 @@ class HandoffSummaryService
       message_type: :outgoing,
       private: true
     )
+  end
+
+  def broadcast_status(status)
+    # Broadcast to agents
+    tokens = @account.agents.pluck(:pubsub_token) + @account.administrators.pluck(:pubsub_token)
+    tokens = tokens.uniq.compact
+
+    return if tokens.blank?
+
+    payload = {
+      conversation_id: @conversation.id,
+      status: status,
+      account_id: @account.id
+    }
+
+    ActionCableBroadcastJob.perform_later(tokens, Events::Types::CONVERSATION_SUMMARY_STATUS, payload)
   end
 end
