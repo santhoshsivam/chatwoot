@@ -99,44 +99,84 @@ class ActionCableConnector extends BaseActionCableConnector {
       conversation: { last_activity_at: lastActivityAt },
       conversation_id: conversationId,
     } = data;
-
+    DashboardAudioNotificationHelper.onNewMessage(data);
     this.app.$store.dispatch('addMessage', data);
     this.app.$store.dispatch('updateConversationLastActivity', {
-      conversationId,
       lastActivityAt,
+      conversationId,
     });
-
-    if (data.message_type === 0) {
-      DashboardAudioNotificationHelper.onNewMessage(data);
-    }
   };
+
+  // eslint-disable-next-line class-methods-use-this
+  onReload = () => window.location.reload();
 
   onStatusChange = data => {
     this.app.$store.dispatch('updateConversation', data);
     this.fetchConversationStats();
   };
 
-  onTypingOn = data => {
-    this.app.$store.dispatch('conversationTypingStatus/create', data);
+  onConversationUpdated = data => {
+    this.app.$store.dispatch('updateConversation', data);
+    this.fetchConversationStats();
   };
 
-  onTypingOff = data => {
-    this.app.$store.dispatch('conversationTypingStatus/destroy', data);
+  onTypingOn = ({ conversation, user }) => {
+    const conversationId = conversation.id;
+
+    this.clearTimer(conversationId);
+    this.app.$store.dispatch('conversationTypingStatus/create', {
+      conversationId,
+      user,
+    });
+    this.initTimer({ conversation, user });
   };
 
-  // eslint-disable-next-line class-methods-use-this
-  onReload = () => window.location.reload();
+  onTypingOff = ({ conversation, user }) => {
+    const conversationId = conversation.id;
 
-  onContactDelete = data => {
-    this.app.$store.dispatch('contacts/delete', data.id);
-  };
-
-  onContactUpdate = data => {
-    this.app.$store.dispatch('contacts/updateContact', data);
+    this.clearTimer(conversationId);
+    this.app.$store.dispatch('conversationTypingStatus/destroy', {
+      conversationId,
+      user,
+    });
   };
 
   onConversationMentioned = data => {
     this.app.$store.dispatch('addMentions', data);
+  };
+
+  clearTimer = conversationId => {
+    const timerEvent = this.CancelTyping[conversationId];
+
+    if (timerEvent) {
+      clearTimeout(timerEvent);
+      this.CancelTyping[conversationId] = null;
+    }
+  };
+
+  initTimer = ({ conversation, user }) => {
+    const conversationId = conversation.id;
+    // Turn off typing automatically after 30 seconds
+    this.CancelTyping[conversationId] = setTimeout(() => {
+      this.onTypingOff({ conversation, user });
+    }, 30000);
+  };
+
+  // eslint-disable-next-line class-methods-use-this
+  fetchConversationStats = () => {
+    emitter.emit('fetch_conversation_stats');
+  };
+
+  onContactDelete = data => {
+    this.app.$store.dispatch(
+      'contacts/deleteContactThroughConversations',
+      data.id
+    );
+    this.fetchConversationStats();
+  };
+
+  onContactUpdate = data => {
+    this.app.$store.dispatch('contacts/updateContact', data);
   };
 
   onNotificationCreated = data => {
@@ -151,25 +191,24 @@ class ActionCableConnector extends BaseActionCableConnector {
     this.app.$store.dispatch('notifications/updateNotification', data);
   };
 
-  onConversationUpdated = data => {
-    this.app.$store.dispatch('updateConversation', data);
-  };
-
-  onCacheInvalidate = data => {
-    this.app.$store.dispatch('updateConversationLabels', data);
+  onCopilotMessageCreated = data => {
+    this.app.$store.dispatch('copilotMessages/upsert', data);
   };
 
   onSummaryStatus = data => {
     this.app.$store.dispatch('updateSummaryStatus', data);
   };
 
-  onCopilotMessageCreated = data => {
-    this.app.$store.dispatch('captain/copilotMessages/addMessage', data);
-  };
-
-  fetchConversationStats = () => {
-    this.app.$store.dispatch('conversationStats/get');
+  onCacheInvalidate = data => {
+    const keys = data.cache_keys;
+    this.app.$store.dispatch('labels/revalidate', { newKey: keys.label });
+    this.app.$store.dispatch('inboxes/revalidate', { newKey: keys.inbox });
+    this.app.$store.dispatch('teams/revalidate', { newKey: keys.team });
   };
 }
 
-export default ActionCableConnector;
+export default {
+  init(store, pubsubToken) {
+    return new ActionCableConnector({ $store: store }, pubsubToken);
+  },
+};
