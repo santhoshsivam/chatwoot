@@ -1,14 +1,19 @@
 import types from '../../mutation-types';
-import getters from './getters';
+import getters, { getSelectedChatConversation } from './getters';
 import actions from './actions';
+import { findPendingMessageIndex } from './helpers';
+import { MESSAGE_STATUS } from 'shared/constants/messages';
+import wootConstants from 'dashboard/constants/globals';
+import { BUS_EVENTS } from '../../../../shared/constants/busEvents';
+import { emitter } from 'shared/helpers/mitt';
 import { CONTENT_TYPES } from 'dashboard/components-next/message/constants.js';
 
 const state = {
   allConversations: [],
   attachments: {},
   listLoadingStatus: true,
-  chatStatusFilter: 'open',
-  chatSortFilter: 'latest',
+  chatStatusFilter: wootConstants.STATUS_TYPE.OPEN,
+  chatSortFilter: wootConstants.SORT_BY_TYPE.LATEST,
   currentInbox: null,
   selectedChatId: null,
   appliedFilters: [],
@@ -35,8 +40,14 @@ export const mutations = {
       if (indexInCurrentList < 0) {
         newAllConversations.push(conversation);
       } else if (conversation.id !== _state.selectedChatId) {
+        // If the conversation is already in the list, replace it
+        // Added this to fix the issue of the conversation not being updated
+        // When reconnecting to the websocket. If the selectedChatId is not the same as
+        // the conversation.id in the store, replace the existing conversation with the new one
         newAllConversations[indexInCurrentList] = conversation;
       } else {
+        // If the conversation is already in the list and selectedChatId is the same,
+        // replace all data except the messages array, attachments, dataFetched, allMessagesLoaded
         const existingConversation = newAllConversations[indexInCurrentList];
         newAllConversations[indexInCurrentList] = {
           ...conversation,
@@ -91,6 +102,237 @@ export const mutations = {
     }
   },
 
+  [types.SET_CURRENT_CHAT_WINDOW](_state, activeChat) {
+    if (activeChat) {
+      _state.selectedChatId = activeChat.id;
+    }
+  },
+
+  [types.ASSIGN_AGENT](_state, { conversationId, assignee }) {
+    const chat = getConversationById(_state)(conversationId);
+    if (chat) {
+      chat.meta.assignee = assignee;
+    }
+  },
+
+  [types.ASSIGN_TEAM](_state, { team, conversationId }) {
+    const [chat] = _state.allConversations.filter(c => c.id === conversationId);
+    chat.meta.team = team;
+  },
+
+  [types.UPDATE_CONVERSATION_LAST_ACTIVITY](
+    _state,
+    { lastActivityAt, conversationId }
+  ) {
+    const [chat] = _state.allConversations.filter(c => c.id === conversationId);
+    if (chat) {
+      chat.last_activity_at = lastActivityAt;
+    }
+  },
+  [types.ASSIGN_PRIORITY](_state, { priority, conversationId }) {
+    const [chat] = _state.allConversations.filter(c => c.id === conversationId);
+    chat.priority = priority;
+  },
+
+  [types.UPDATE_CONVERSATION_CUSTOM_ATTRIBUTES](
+    _state,
+    { conversationId, customAttributes }
+  ) {
+    const conversation = _state.allConversations.find(
+      c => c.id === conversationId
+    );
+    if (conversation) {
+      conversation.custom_attributes = {
+        ...conversation.custom_attributes,
+        ...customAttributes,
+      };
+    }
+  },
+
+  [types.CHANGE_CONVERSATION_STATUS](
+    _state,
+    { conversationId, status, snoozedUntil }
+  ) {
+    const conversation =
+      getters.getConversationById(_state)(conversationId) || {};
+    conversation.snoozed_until = snoozedUntil;
+    conversation.status = status;
+  },
+
+  [types.MUTE_CONVERSATION](_state) {
+    const [chat] = getSelectedChatConversation(_state);
+    chat.muted = true;
+  },
+
+  [types.UNMUTE_CONVERSATION](_state) {
+    const [chat] = getSelectedChatConversation(_state);
+    chat.muted = false;
+  },
+
+  [types.ADD_CONVERSATION_ATTACHMENTS](_state, message) {
+    // early return if the message has not been sent, or has no attachments
+    if (
+      message.status !== MESSAGE_STATUS.SENT ||
+      !message.attachments?.length
+    ) {
+      return;
+    }
+
+    const id = message.conversation_id;
+    const existingAttachments = _state.attachments[id] || [];
+
+    const attachmentsToAdd = message.attachments.filter(attachment => {
+      // if the attachment is not already in the store, add it
+      // this is to prevent duplicates
+      return !existingAttachments.some(
+        existingAttachment => existingAttachment.id === attachment.id
+      );
+    });
+
+    // replace the attachments in the store
+    _state.attachments[id] = [...existingAttachments, ...attachmentsToAdd];
+  },
+
+  [types.DELETE_CONVERSATION_ATTACHMENTS](_state, message) {
+    if (message.status !== MESSAGE_STATUS.SENT) return;
+
+    const { conversation_id: id } = message;
+    const existingAttachments = _state.attachments[id] || [];
+    if (!existingAttachments.length) return;
+
+    _state.attachments[id] = existingAttachments.filter(attachment => {
+      return attachment.message_id !== message.id;
+    });
+  },
+
+  [types.ADD_MESSAGE]({ allConversations, selectedChatId }, message) {
+    const { conversation_id: conversationId } = message;
+    const [chat] = getSelectedChatConversation({
+      allConversations,
+      selectedChatId: conversationId,
+    });
+    if (!chat) return;
+
+    const pendingMessageIndex = findPendingMessageIndex(chat, message);
+    if (pendingMessageIndex !== -1) {
+      chat.messages[pendingMessageIndex] = message;
+    } else {
+      chat.messages.push(message);
+      chat.timestamp = message.created_at;
+      const { conversation: { unread_count: unreadCount = 0 } = {} } = message;
+      chat.unread_count = unreadCount;
+      if (selectedChatId === conversationId) {
+        emitter.emit(BUS_EVENTS.SCROLL_TO_MESSAGE);
+      }
+    }
+  },
+
+  [types.ADD_CONVERSATION](_state, conversation) {
+    const exists = _state.allConversations.some(c => c.id === conversation.id);
+    if (!exists) {
+      _state.allConversations.push(conversation);
+    }
+  },
+
+  [types.DELETE_CONVERSATION](_state, conversationId) {
+    _state.allConversations = _state.allConversations.filter(
+      c => c.id !== conversationId
+    );
+  },
+
+  [types.UPDATE_CONVERSATION](_state, conversation) {
+    const { allConversations } = _state;
+    const index = allConversations.findIndex(c => c.id === conversation.id);
+
+    if (index > -1) {
+      const selectedConversation = allConversations[index];
+
+      // ignore out of order events
+      if (conversation.updated_at < selectedConversation.updated_at) {
+        return;
+      }
+
+      const { messages, ...updates } = conversation;
+      allConversations[index] = { ...selectedConversation, ...updates };
+      if (_state.selectedChatId === conversation.id) {
+        emitter.emit(BUS_EVENTS.SCROLL_TO_MESSAGE);
+      }
+    } else {
+      _state.allConversations.push(conversation);
+    }
+  },
+
+  [types.SET_LIST_LOADING_STATUS](_state) {
+    _state.listLoadingStatus = true;
+  },
+
+  [types.CLEAR_LIST_LOADING_STATUS](_state) {
+    _state.listLoadingStatus = false;
+  },
+
+  [types.UPDATE_MESSAGE_UNREAD_COUNT](
+    _state,
+    { id, lastSeen, unreadCount = 0 }
+  ) {
+    const [chat] = _state.allConversations.filter(c => c.id === id);
+    if (chat) {
+      chat.agent_last_seen_at = lastSeen;
+      chat.unread_count = unreadCount;
+    }
+  },
+  [types.CHANGE_CHAT_STATUS_FILTER](_state, data) {
+    _state.chatStatusFilter = data;
+  },
+
+  [types.CHANGE_CHAT_SORT_FILTER](_state, data) {
+    _state.chatSortFilter = data;
+  },
+
+  // Update assignee on action cable message
+  [types.UPDATE_ASSIGNEE](_state, payload) {
+    const chat = getConversationById(_state)(payload.id);
+    if (chat) {
+      chat.meta.assignee = payload.assignee;
+    }
+  },
+
+  [types.UPDATE_CONVERSATION_CONTACT](_state, { conversationId, ...payload }) {
+    const [chat] = _state.allConversations.filter(c => c.id === conversationId);
+    if (chat) {
+      chat.meta.sender = payload;
+    }
+  },
+
+  [types.UPDATE_CONVERSATION_CALL_STATUS](
+    _state,
+    { conversationId, callStatus }
+  ) {
+    const chat = getConversationById(_state)(conversationId);
+    if (!chat) return;
+
+    chat.additional_attributes = {
+      ...chat.additional_attributes,
+      call_status: callStatus,
+    };
+  },
+
+  [types.UPDATE_MESSAGE_CALL_STATUS](_state, { conversationId, callStatus }) {
+    const chat = getConversationById(_state)(conversationId);
+    if (!chat) return;
+
+    const lastCall = (chat.messages || []).findLast(
+      m => m.content_type === CONTENT_TYPES.VOICE_CALL
+    );
+
+    if (!lastCall) return;
+
+    lastCall.content_attributes ??= {};
+    lastCall.content_attributes.data = {
+      ...lastCall.content_attributes.data,
+      status: callStatus,
+    };
+  },
+
   [types.SET_ACTIVE_INBOX](_state, inboxId) {
     _state.currentInbox = inboxId ? parseInt(inboxId, 10) : null;
   },
@@ -134,194 +376,6 @@ export const mutations = {
   [types.UPDATE_CHAT_LIST_FILTERS](_state, data) {
     _state.conversationFilters = { ..._state.conversationFilters, ...data };
   },
-
-  [types.ADD_CONVERSATION](_state, conversation) {
-    _state.allConversations.push(conversation);
-  },
-
-  [types.UPDATE_CONVERSATION](_state, conversation) {
-    const index = _state.allConversations.findIndex(
-      c => c.id === conversation.id
-    );
-    if (index !== -1) {
-      const existingConversation = _state.allConversations[index];
-      _state.allConversations.splice(index, 1, {
-        ...existingConversation,
-        ...conversation,
-      });
-    }
-  },
-
-  [types.CHANGE_CONVERSATION_STATUS](
-    _state,
-    { conversationId, status, snoozedUntil }
-  ) {
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.status = status;
-      chat.snoozed_until = snoozedUntil;
-    }
-  },
-
-  [types.ASSIGN_AGENT](_state, { conversationId, assignee }) {
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.meta.assignee = assignee;
-    }
-  },
-
-  [types.ASSIGN_TEAM](_state, { team, conversationId }) {
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.meta.team = team;
-    }
-  },
-
-  [types.ASSIGN_PRIORITY](_state, { priority, conversationId }) {
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.priority = priority;
-    }
-  },
-
-  [types.ADD_MESSAGE](_state, message) {
-    const chat = getConversationById(_state)(message.conversation_id);
-    if (chat) {
-      const index = chat.messages.findIndex(m => m.id === message.id);
-      if (index === -1) {
-        chat.messages.push(message);
-      } else {
-        chat.messages.splice(index, 1, message);
-      }
-    }
-  },
-
-  [types.SET_CONVERSATION_METADATA](_state, { id, data }) {
-    const chat = getConversationById(_state)(id);
-    if (chat) {
-      chat.meta = { ...chat.meta, ...data };
-    }
-  },
-
-  [types.UPDATE_CONVERSATION_CUSTOM_ATTRIBUTES](
-    _state,
-    { conversationId, customAttributes }
-  ) {
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.custom_attributes = customAttributes;
-    }
-  },
-
-  [types.UPDATE_CONVERSATION_LAST_ACTIVITY](
-    _state,
-    { conversationId, lastActivityAt }
-  ) {
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.last_activity_at = lastActivityAt;
-    }
-  },
-
-  [types.MUTE_CONVERSATION](_state) {
-    const chat = getConversationById(_state)(_state.selectedChatId);
-    if (chat) {
-      chat.muted = true;
-    }
-  },
-
-  [types.UNMUTE_CONVERSATION](_state) {
-    const chat = getConversationById(_state)(_state.selectedChatId);
-    if (chat) {
-      chat.muted = false;
-    }
-  },
-
-  [types.SET_CURRENT_CHAT_WINDOW](_state, data) {
-    _state.selectedChatId = data.id;
-  },
-
-  [types.UPDATE_MESSAGE_UNREAD_COUNT](_state, { conversationId, unreadCount }) {
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.unread_count = unreadCount;
-    }
-  },
-
-  [types.ADD_CONVERSATION_ATTACHMENTS](_state, message) {
-    const { conversation_id: conversationId, attachments } = message;
-    if (attachments && attachments.length) {
-      const chat = getConversationById(_state)(conversationId);
-      if (chat) {
-        _state.attachments[conversationId] = [
-          ...(_state.attachments[conversationId] || []),
-          ...attachments,
-        ];
-      }
-    }
-  },
-
-  [types.DELETE_CONVERSATION_ATTACHMENTS](_state, message) {
-    const { conversation_id: conversationId, attachments } = message;
-    if (attachments && attachments.length) {
-      const attachmentIds = attachments.map(a => a.id);
-      _state.attachments[conversationId] = (
-        _state.attachments[conversationId] || []
-      ).filter(a => !attachmentIds.includes(a.id));
-    }
-  },
-
-  [types.DELETE_CONVERSATION](_state, conversationId) {
-    _state.allConversations = _state.allConversations.filter(
-      c => c.id !== conversationId
-    );
-    if (_state.selectedChatId === conversationId) {
-      _state.selectedChatId = null;
-    }
-  },
-
-  [types.UPDATE_CONVERSATION_CONTACT](_state, payload) {
-    const { conversationId, ...sender } = payload;
-    const chat = getConversationById(_state)(conversationId);
-    if (chat) {
-      chat.meta.sender = { ...chat.meta.sender, ...sender };
-    }
-  },
-
-  [types.UPDATE_CONVERSATION_CALL_STATUS](
-    _state,
-    { conversationId, callStatus }
-  ) {
-    const chat = getConversationById(_state)(conversationId);
-    if (!chat) return;
-
-    chat.additional_attributes = {
-      ...chat.additional_attributes,
-      call_status: callStatus,
-    };
-  },
-
-  [types.UPDATE_MESSAGE_CALL_STATUS](_state, { conversationId, callStatus }) {
-    const chat = getConversationById(_state)(conversationId);
-    if (!chat) return;
-
-    const lastCall = (chat.messages || []).findLast(
-      m => m.content_type === CONTENT_TYPES.VOICE_CALL
-    );
-
-    if (!lastCall) return;
-
-    lastCall.content_attributes ??= {};
-    lastCall.content_attributes.data = {
-      ...lastCall.content_attributes.data,
-      status: callStatus,
-    };
-  },
-
-  [types.UPDATE_CHAT_LIST_FILTERS](_state, data) {
-    _state.conversationFilters = { ..._state.conversationFilters, ...data };
-  },
-
   [types.SET_INBOX_CAPTAIN_ASSISTANT](_state, data) {
     _state.copilotAssistant = data.assistant;
   },
