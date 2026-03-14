@@ -1,18 +1,18 @@
 # Implementation Plan: Auto-generate Handoff Summary
 
 ## Phase 1: Research & Discovery
-- [ ] Task: Research conversation transfer trigger points in Chatwoot (Rails controllers/models).
-- [ ] Task: Explore existing LLM integration services (e.g., `Captain`, `AI::SummaryService`).
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Research & Discovery' (Protocol in workflow.md)
+- [x] Task: Research conversation transfer trigger points in Chatwoot (Rails controllers/models).
+- [x] Task: Explore existing LLM integration services (e.g., `Captain`, `AI::SummaryService`).
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Research & Discovery' (Protocol in workflow.md)
 
 ## Phase 2: Backend Implementation
-- [ ] Task: Write tests for the `HandoffSummaryService`.
-- [ ] Task: Implement the `HandoffSummaryService` to call the LLM and generate the structured summary.
-- [ ] Task: Write tests for the transfer interceptor.
-- [ ] Task: Implement a hook to trigger the summary generation during conversation transfer.
-- [ ] Task: Write tests for creating the private note with the generated summary.
-- [ ] Task: Implement the logic to save the summary as a private note.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Backend Implementation' (Protocol in workflow.md)
+- [x] Task: Write tests for the `HandoffSummaryService`.
+- [x] Task: Implement the `HandoffSummaryService` to call the LLM and generate the structured summary.
+- [x] Task: Write tests for the transfer interceptor.
+- [x] Task: Implement a hook to trigger the summary generation during conversation transfer.
+- [x] Task: Write tests for creating the private note with the generated summary.
+- [x] Task: Implement the logic to save the summary as a private note.
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Backend Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Frontend Integration (Optional/Enhancement)
 - [ ] Task: Write tests for the handoff UI changes.
