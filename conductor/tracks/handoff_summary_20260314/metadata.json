@@ -1,8 +1,0 @@
-{
-  "track_id": "handoff_summary_20260314",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-03-14T12:00:00Z",
-  "updated_at": "2026-03-14T12:00:00Z",
-  "description": "When an agent is about to transfer a conversation to another agent or team, auto-generate a structured handoff summary using an LLM — including customer intent, sentiment, key issues discussed, and suggested next steps — and insert it as a private note."
-}
