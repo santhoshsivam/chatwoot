@@ -379,6 +379,16 @@ export const mutations = {
   [types.SET_INBOX_CAPTAIN_ASSISTANT](_state, data) {
     _state.copilotAssistant = data.assistant;
   },
+
+  [types.UPDATE_CONVERSATION_SUMMARY_STATUS](
+    _state,
+    { conversation_id: conversationId, status }
+  ) {
+    const chat = getConversationById(_state)(conversationId);
+    if (chat) {
+      chat.summaryStatus = status;
+    }
+  },
 };
 
 export default {

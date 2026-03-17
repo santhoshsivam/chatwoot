@@ -67,6 +67,9 @@ export default {
       currentUser: 'getCurrentUser',
       teams: 'teams/getTeams',
     }),
+    summaryStatus() {
+      return this.currentChat?.summaryStatus;
+    },
     hasAnAssignedTeam() {
       return !!this.currentChat?.meta?.team;
     },
@@ -260,6 +263,19 @@ export default {
         "
         @select="onClickAssignTeam"
       />
+    </div>
+    <div
+      v-if="summaryStatus === 'in_progress'"
+      class="p-2 mt-2 text-xs font-medium italic text-slate-600 bg-slate-50 border border-slate-100 rounded-md flex items-center gap-2"
+    >
+      <i class="i-lucide-loader-2 animate-spin w-3 h-3" />
+      {{ $t('CONVERSATION.HANDOFF_SUMMARY.GENERATING') }}
+    </div>
+    <div
+      v-if="summaryStatus === 'failed'"
+      class="p-2 mt-2 text-xs font-medium text-red-600 bg-red-50 border border-red-100 rounded-md"
+    >
+      {{ $t('CONVERSATION.HANDOFF_SUMMARY.ERROR') }}
     </div>
     <div>
       <ContactDetailsItem compact :title="$t('CONVERSATION.PRIORITY.TITLE')" />

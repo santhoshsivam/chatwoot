@@ -156,4 +156,15 @@ describe('#mutations', () => {
       expect(state.allConversations[0].messages).toEqual([]);
     });
   });
+
+  describe('#UPDATE_CONVERSATION_SUMMARY_STATUS', () => {
+    it('updates the summary status of the conversation', () => {
+      const state = { allConversations: [{ id: 1 }] };
+      mutations[types.UPDATE_CONVERSATION_SUMMARY_STATUS](state, {
+        conversation_id: 1,
+        status: 'in_progress',
+      });
+      expect(state.allConversations[0].summaryStatus).toBe('in_progress');
+    });
+  });
 });
