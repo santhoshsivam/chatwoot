@@ -52,4 +52,20 @@ RSpec.describe 'Conversation Pins API', type: :request do
       expect(json_response.first['id']).to eq(pinned_message.id)
     end
   end
+
+  describe 'GET /api/v1/accounts/{account.id}/conversations/{conversation.id}' do
+    before do
+      create(:message, conversation: conversation, account: account, pinned: true, pinned_at: Time.now.utc)
+    end
+
+    it 'includes pinned_messages_count in the response' do
+      get "/api/v1/accounts/#{account.id}/conversations/#{conversation.display_id}",
+          headers: agent.create_new_auth_token,
+          as: :json
+
+      expect(response).to have_http_status(:success)
+      json_response = response.parsed_body
+      expect(json_response['pinned_messages_count']).to eq(1)
+    end
+  end
 end
