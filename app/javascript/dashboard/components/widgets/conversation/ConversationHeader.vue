@@ -151,6 +151,16 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
         :parent-width="width"
         class="hidden md:flex"
       />
+      <div
+        v-if="chat.pinned_messages_count > 0"
+        data-testid="pinned-messages-button"
+        class="flex items-center gap-1 px-2 py-1 transition-colors rounded-md cursor-pointer hover:bg-n-alpha-2 text-n-slate-11 hover:text-n-slate-12"
+      >
+        <fluent-icon icon="pin" size="14" />
+        <span class="text-xs font-medium">{{
+          chat.pinned_messages_count
+        }}</span>
+      </div>
       <MoreActions :conversation-id="currentChat.id" />
     </div>
   </div>
