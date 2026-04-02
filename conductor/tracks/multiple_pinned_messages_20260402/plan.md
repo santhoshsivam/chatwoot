@@ -7,7 +7,7 @@
 - [x] Task: Write tests for pinning and unpinning logic in the `Message` model. (aa5b33d)
 - [x] Task: Write tests for the `PinsController` (or equivalent) endpoints. (545fb9a)
 - [x] Task: Implement a background job or service (if needed) to handle the `pinned_at` timestamp update. (545fb9a)
-- [x] Task: Conductor - User Manual Verification 'Phase 1: Database & Backend Implementation' (Protocol in workflow.md) (477c8d8)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Database & Backend Implementation' (Protocol in workflow.md) (e0d27cd)
 
 ## Phase 2: API & Frontend Integration (Pins List)
 - [ ] Task: Update the conversation API to include pinned messages in the response or provide a dedicated endpoint.
