@@ -54,6 +54,16 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
     render json: { content: translated_content }
   end
 
+  def pin
+    message.update!(pinned: true, pinned_at: Time.now.utc)
+    render json: message
+  end
+
+  def unpin
+    message.update!(pinned: false, pinned_at: nil)
+    render json: message
+  end
+
   private
 
   def message

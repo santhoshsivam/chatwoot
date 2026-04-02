@@ -133,8 +133,11 @@ Rails.application.routes.draw do
                 member do
                   post :translate
                   post :retry
+                  post :pin
+                  post :unpin
                 end
               end
+              resources :pins, only: [:index]
               resources :assignments, only: [:create]
               resources :labels, only: [:create, :index]
               resource :participants, only: [:show, :create, :update, :destroy]
