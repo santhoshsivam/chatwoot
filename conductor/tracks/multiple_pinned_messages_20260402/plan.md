@@ -1,7 +1,7 @@
 # Implementation Plan: Multiple Pinned Messages
 
 ## Phase 1: Database & Backend Implementation
-- [ ] Task: Create a migration to add a `pinned` boolean and `pinned_at` timestamp to the `messages` table.
+- [x] Task: Create a migration to add a `pinned` boolean and `pinned_at` timestamp to the `messages` table. (fadb56b)
 - [ ] Task: Update the `Message` model to include scopes for pinned messages.
 - [ ] Task: Create a `PinsController` (or update `MessagesController`) to handle pinning and unpinning actions.
 - [ ] Task: Write tests for pinning and unpinning logic in the `Message` model.
