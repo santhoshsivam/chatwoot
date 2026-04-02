@@ -4,9 +4,9 @@
 - [x] Task: Create a migration to add a `pinned` boolean and `pinned_at` timestamp to the `messages` table. (fadb56b)
 - [x] Task: Update the `Message` model to include scopes for pinned messages. (aa5b33d)
 - [x] Task: Create a `PinsController` (or update `MessagesController`) to handle pinning and unpinning actions. (545fb9a)
-- [ ] Task: Write tests for pinning and unpinning logic in the `Message` model.
-- [ ] Task: Write tests for the `PinsController` (or equivalent) endpoints.
-- [ ] Task: Implement a background job or service (if needed) to handle the `pinned_at` timestamp update.
+- [x] Task: Write tests for pinning and unpinning logic in the `Message` model. (aa5b33d)
+- [x] Task: Write tests for the `PinsController` (or equivalent) endpoints. (545fb9a)
+- [x] Task: Implement a background job or service (if needed) to handle the `pinned_at` timestamp update. (545fb9a)
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Database & Backend Implementation' (Protocol in workflow.md)
 
 ## Phase 2: API & Frontend Integration (Pins List)
