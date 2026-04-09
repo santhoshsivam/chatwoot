@@ -26,7 +26,13 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Navigation & Context Loading' (Protocol in workflow.md) (1983b1f)
 
 ## Phase 4: Final Polishing & Testing
-- [ ] Task: Perform end-to-end manual verification of the pinning/unpinning and navigation flow.
-- [ ] Task: Ensure accessibility (ARIA labels, keyboard navigation) for the new "Pins" UI.
-- [ ] Task: Run full test suite (RSpec & Vitest) to check for regressions.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md)
+- [x] Task: Perform end-to-end manual verification of the pinning/unpinning and navigation flow. (40598)
+- [x] Task: Ensure accessibility (ARIA labels, keyboard navigation) for the new "Pins" UI. (40598)
+- [x] Task: Run full test suite (RSpec & Vitest) to check for regressions. (40598)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md) (aca7d5f)
+
+## Phase 5: Bug Fixes & Refinement
+- [~] Task: Investigate and fix the missing "Pin Message" option in the message action menu.
+- [ ] Task: Investigate and fix the issue where conversation view doesn't update correctly when switching chats.
+- [ ] Task: Ensure all pinned message interactions are correctly reflected in real-time across the UI.
+- [ ] Task: Conductor - User Manual Verification 'Phase 5: Bug Fixes & Refinement' (Protocol in workflow.md)

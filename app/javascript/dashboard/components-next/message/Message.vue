@@ -390,6 +390,7 @@ const contextMenuEnabledOptions = computed(() => {
       !isFailedOrProcessing,
     pin: !isFailedOrProcessing && !isMessageDeleted.value,
   };
+
 });
 
 const shouldRenderMessage = computed(() => {

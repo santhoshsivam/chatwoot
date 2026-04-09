@@ -20,7 +20,6 @@ export default {
     AddCannedModal,
     MenuItem,
     ContextMenu,
-    NextButton,
   },
   props: {
     message: {
@@ -192,15 +191,13 @@ export default {
       :confirm-text="$t('CONVERSATION.CONTEXT_MENU.DELETE_CONFIRMATION.DELETE')"
       :reject-text="$t('CONVERSATION.CONTEXT_MENU.DELETE_CONFIRMATION.CANCEL')"
     />
-    <NextButton
+    <button
       v-if="!hideButton"
-      ghost
-      slate
-      sm
-      icon="i-lucide-ellipsis-vertical"
-      class="visible"
+      class="flex items-center justify-center w-8 h-8 rounded-full bg-n-alpha-black2 hover:bg-n-alpha-black3 text-n-slate-11"
       @click="handleOpen"
-    />
+    >
+      <fluent-icon icon="more-vertical" size="16" />
+    </button>
     <ContextMenu
       v-if="isOpen && !isCannedResponseModalOpen"
       :x="contextMenuPosition.x"
