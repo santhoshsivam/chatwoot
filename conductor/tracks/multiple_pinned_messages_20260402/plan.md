@@ -15,7 +15,7 @@
 - [x] Task: Create a Vue.js component for the "Pinned Messages" list (dropdown or sidebar). (d33f5bf)
 - [x] Task: Write tests for the "Pins" list component. (d33f5bf)
 - [x] Task: Implement the logic to fetch and display pinned messages in the header. (e8f6b21)
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: API & Frontend Integration (Pins List)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: API & Frontend Integration (Pins List)' (Protocol in workflow.md) (4754af1)
 
 ## Phase 3: Navigation & Context Loading
 - [ ] Task: Update the message list component to handle "scrolling to a specific message ID".
