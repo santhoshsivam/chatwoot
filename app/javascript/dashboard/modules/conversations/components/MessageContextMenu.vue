@@ -237,7 +237,8 @@ export default {
         <MenuItem
           v-if="enabledOptions['pin']"
           :option="{
-            icon: 'checkmark-outline',
+            icon: 'pin-16',
+            type: 'regular',
             label: isPinned
               ? $t('CONVERSATION.CONTEXT_MENU.UNPIN_MESSAGE')
               : $t('CONVERSATION.CONTEXT_MENU.PIN_MESSAGE'),
