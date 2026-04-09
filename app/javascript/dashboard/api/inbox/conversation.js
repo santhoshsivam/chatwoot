@@ -141,6 +141,18 @@ class ConversationApi extends ApiClient {
     return axios.get(`${this.url}/${conversationId}/pins`);
   }
 
+  pinMessage(conversationId, messageId) {
+    return axios.post(
+      `${this.url}/${conversationId}/messages/${messageId}/pin`
+    );
+  }
+
+  unpinMessage(conversationId, messageId) {
+    return axios.post(
+      `${this.url}/${conversationId}/messages/${messageId}/unpin`
+    );
+  }
+
   getMessagesAround(conversationId, messageId) {
     return axios.get(`${this.url}/${conversationId}/messages`, {
       params: {

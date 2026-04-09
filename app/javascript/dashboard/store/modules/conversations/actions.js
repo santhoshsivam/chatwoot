@@ -11,6 +11,7 @@ import {
 } from './helpers/actionHelpers';
 import messageReadActions from './actions/messageReadActions';
 import messageTranslateActions from './actions/messageTranslateActions';
+import messagePinActions from './actions/messagePinActions';
 import * as Sentry from '@sentry/vue';
 import {
   handleVoiceCallCreated,
@@ -564,6 +565,7 @@ const actions = {
 
   ...messageReadActions,
   ...messageTranslateActions,
+  ...messagePinActions,
 };
 
 export default actions;

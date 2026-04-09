@@ -98,6 +98,7 @@ export default {
   >
     <ConversationHeader
       v-if="currentChat.id"
+      :key="`header-${currentChat.id}`"
       :chat="currentChat"
       :show-back-button="isOnExpandedLayout && !isInboxView"
       :class="{
@@ -122,6 +123,7 @@ export default {
     <div v-show="!activeIndex" class="flex h-full min-h-0 m-0">
       <MessagesView
         v-if="currentChat.id"
+        :key="`messages-${currentChat.id}`"
         :inbox-id="inboxId"
         :is-inbox-view="isInboxView"
       />

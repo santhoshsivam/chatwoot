@@ -129,6 +129,7 @@ const props = defineProps({
   inReplyTo: { type: Object, default: null }, // eslint-disable-line vue/no-unused-properties
   isEmailInbox: { type: Boolean, default: false },
   private: { type: Boolean, default: false },
+  pinned: { type: Boolean, default: false },
   additionalAttributes: { type: Object, default: () => ({}) }, // eslint-disable-line vue/no-unused-properties
   sender: { type: Object, default: null },
   senderId: { type: Number, default: null },
@@ -361,6 +362,7 @@ const payloadForContextMenu = computed(() => {
     content_attributes: props.contentAttributes,
     content: props.content,
     conversation_id: props.conversationId,
+    pinned: props.pinned,
   };
 });
 
@@ -386,6 +388,7 @@ const contextMenuEnabledOptions = computed(() => {
       !props.private &&
       props.inboxSupportsReplyTo.outgoing &&
       !isFailedOrProcessing,
+    pin: !isFailedOrProcessing && !isMessageDeleted.value,
   };
 });
 
@@ -518,7 +521,7 @@ provideMessageContext({
   <div
     v-if="shouldRenderMessage"
     :id="`message${props.id}`"
-    class="flex w-full mb-2 message-bubble-container"
+    class="flex w-full mb-2 message-bubble-container group/context-menu"
     :data-message-id="props.id"
     :class="[
       flexOrientationClass,
@@ -578,7 +581,6 @@ provideMessageContext({
         :is-open="showContextMenu"
         :enabled-options="contextMenuEnabledOptions"
         :message="payloadForContextMenu"
-        hide-button
         @open="openContextMenu"
         @close="closeContextMenu"
         @reply-to="handleReplyTo"

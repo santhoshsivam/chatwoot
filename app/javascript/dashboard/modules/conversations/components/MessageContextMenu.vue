@@ -81,8 +81,19 @@ export default {
         this.message.content_attributes ?? this.message.contentAttributes
       );
     },
+    isPinned() {
+      return !!this.message.pinned;
+    },
   },
   methods: {
+    async handlePinMessage() {
+      const action = this.isPinned ? 'unpinMessage' : 'pinMessage';
+      await this.$store.dispatch(action, {
+        conversationId: this.conversationId,
+        messageId: this.messageId,
+      });
+      this.handleClose();
+    },
     async copyLinkToMessage() {
       const fullConversationURL =
         window.chatwootConfig.hostURL +
@@ -187,7 +198,7 @@ export default {
       slate
       sm
       icon="i-lucide-ellipsis-vertical"
-      class="invisible group-hover/context-menu:visible"
+      class="visible"
       @click="handleOpen"
     />
     <ContextMenu
@@ -223,6 +234,17 @@ export default {
           }"
           variant="icon"
           @click.stop="handleTranslate"
+        />
+        <MenuItem
+          v-if="enabledOptions['pin']"
+          :option="{
+            icon: 'pin',
+            label: isPinned
+              ? $t('CONVERSATION.CONTEXT_MENU.UNPIN_MESSAGE')
+              : $t('CONVERSATION.CONTEXT_MENU.PIN_MESSAGE'),
+          }"
+          variant="icon"
+          @click.stop="handlePinMessage"
         />
         <hr />
         <MenuItem

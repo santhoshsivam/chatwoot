@@ -16,7 +16,7 @@ Empower businesses to provide seamless, omnichannel customer support with an ope
 - **AI Agent (Captain):** Automate responses and handle routine queries.
 - **Handoff Summarization:** Automatically generate structured summaries (intent, sentiment, key issues) when conversations are transferred between agents or teams.
 - **Help Center:** A portal for publishing FAQs and articles.
-- **Collaboration Tools:** Private notes, @mentions, and labels for internal teamwork.
+- **Collaboration Tools:** Private notes, @mentions, labels, and pinned messages for internal teamwork.
 - **Integrations:** Slack, Dialogflow, Shopify, and more.
 - **Reporting & Insights:** Dashboards for real-time monitoring and historical analysis.
 
