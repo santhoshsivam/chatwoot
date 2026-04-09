@@ -414,10 +414,12 @@ const shouldRenderMessage = computed(() => {
 });
 
 function openContextMenu(e) {
+  console.log('openContextMenu called with event:', e);
   const shouldSkipContextMenu =
     e.target?.classList.contains('skip-context-menu') ||
     ['a', 'img'].includes(e.target?.tagName.toLowerCase());
   if (shouldSkipContextMenu || getSelection().toString()) {
+    console.log('Skipping context menu');
     return;
   }
 
@@ -430,6 +432,7 @@ function openContextMenu(e) {
     y: e.pageY || e.clientY,
   };
   showContextMenu.value = true;
+  console.log('showContextMenu set to true');
 }
 
 function closeContextMenu() {
