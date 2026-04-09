@@ -32,7 +32,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 4: Final Verification' (Protocol in workflow.md) (aca7d5f)
 
 ## Phase 5: Bug Fixes & Refinement
-- [~] Task: Investigate and fix the missing "Pin Message" option in the message action menu.
+- [x] Task: Investigate and fix the missing "Pin Message" option in the message action menu. (70a2d3d)
 - [ ] Task: Investigate and fix the issue where conversation view doesn't update correctly when switching chats.
 - [ ] Task: Ensure all pinned message interactions are correctly reflected in real-time across the UI.
 - [ ] Task: Conductor - User Manual Verification 'Phase 5: Bug Fixes & Refinement' (Protocol in workflow.md)
