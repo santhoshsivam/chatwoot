@@ -158,6 +158,7 @@ module.exports = {
       'error',
       {
         ignorePatterns: [
+          '^v-',
           '^woot-',
           '^fluent-',
           '^multiselect',

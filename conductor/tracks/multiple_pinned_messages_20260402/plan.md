@@ -13,8 +13,8 @@
 - [x] Task: Update the conversation API to include pinned messages in the response or provide a dedicated endpoint. (3ae74f6)
 - [x] Task: Create a Vue.js component for the "Pins" icon and count in the conversation header. (a3ab758)
 - [x] Task: Create a Vue.js component for the "Pinned Messages" list (dropdown or sidebar). (d33f5bf)
-- [ ] Task: Write tests for the "Pins" list component.
-- [ ] Task: Implement the logic to fetch and display pinned messages in the header.
+- [x] Task: Write tests for the "Pins" list component. (d33f5bf)
+- [x] Task: Implement the logic to fetch and display pinned messages in the header. (e8f6b21)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: API & Frontend Integration (Pins List)' (Protocol in workflow.md)
 
 ## Phase 3: Navigation & Context Loading

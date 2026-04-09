@@ -528,6 +528,18 @@ const actions = {
     }
   },
 
+  fetchPinnedMessages: async ({ commit }, conversationId) => {
+    try {
+      const response = await ConversationApi.getPinnedMessages(conversationId);
+      commit(types.SET_CONVERSATION_PINNED_MESSAGES, {
+        id: conversationId,
+        data: response.data,
+      });
+    } catch (error) {
+      // Ignore error
+    }
+  },
+
   updateSummaryStatus: ({ commit }, data) => {
     commit(types.UPDATE_CONVERSATION_SUMMARY_STATUS, data);
   },

@@ -8,6 +8,7 @@ import InboxName from '../InboxName.vue';
 import MoreActions from './MoreActions.vue';
 import Avatar from 'next/avatar/Avatar.vue';
 import SLACardLabel from './components/SLACardLabel.vue';
+import PinnedMessagesList from './PinnedMessagesList.vue';
 import wootConstants from 'dashboard/constants/globals';
 import { conversationListPageURL } from 'dashboard/helper/URLHelper';
 import { snoozedReopenTime } from 'dashboard/helper/snoozeHelpers';
@@ -34,6 +35,12 @@ const { isAWebWidgetInbox } = useInbox();
 
 const currentChat = computed(() => store.getters.getSelectedChat);
 const accountId = computed(() => store.getters.getCurrentAccountId);
+
+const pinnedMessages = computed(() => store.getters.getPinnedMessages);
+
+const fetchPinnedMessages = () => {
+  store.dispatch('fetchPinnedMessages', currentChat.value.id);
+};
 
 const chatMetadata = computed(() => props.chat.meta);
 
@@ -151,16 +158,25 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
         :parent-width="width"
         class="hidden md:flex"
       />
-      <div
-        v-if="chat.pinned_messages_count > 0"
-        data-testid="pinned-messages-button"
-        class="flex items-center gap-1 px-2 py-1 transition-colors rounded-md cursor-pointer hover:bg-n-alpha-2 text-n-slate-11 hover:text-n-slate-12"
-      >
-        <fluent-icon icon="pin" size="14" />
-        <span class="text-xs font-medium">{{
-          chat.pinned_messages_count
-        }}</span>
-      </div>
+      <v-dropdown :distance="12">
+        <div
+          v-if="chat.pinned_messages_count > 0"
+          data-testid="pinned-messages-button"
+          class="flex items-center gap-1 px-2 py-1 transition-colors rounded-md cursor-pointer hover:bg-n-alpha-2 text-n-slate-11 hover:text-n-slate-12"
+          @click="fetchPinnedMessages"
+        >
+          <fluent-icon icon="pin" size="14" />
+          <span class="text-xs font-medium">{{
+            chat.pinned_messages_count
+          }}</span>
+        </div>
+        <template #popper>
+          <div class="w-80 h-[400px]">
+            <PinnedMessagesList :pinned-messages="pinnedMessages" />
+          </div>
+        </template>
+      </v-dropdown>
+
       <MoreActions :conversation-id="currentChat.id" />
     </div>
   </div>

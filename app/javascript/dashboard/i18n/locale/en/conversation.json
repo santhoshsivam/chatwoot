@@ -88,6 +88,10 @@
       "THEY_ANSWERED": "They answered",
       "YOU_ANSWERED": "You answered"
     },
+    "PINNED_MESSAGES": {
+      "TITLE": "Pinned Messages",
+      "EMPTY": "No pinned messages yet."
+    },
     "HEADER": {
       "RESOLVE_ACTION": "Resolve",
       "REOPEN_ACTION": "Reopen",

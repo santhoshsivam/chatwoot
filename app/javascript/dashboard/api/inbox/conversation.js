@@ -137,6 +137,10 @@ class ConversationApi extends ApiClient {
     return axios.get(`${this.url}/${conversationId}/inbox_assistant`);
   }
 
+  getPinnedMessages(conversationId) {
+    return axios.get(`${this.url}/${conversationId}/pins`);
+  }
+
   delete(conversationId) {
     return axios.delete(`${this.url}/${conversationId}`);
   }

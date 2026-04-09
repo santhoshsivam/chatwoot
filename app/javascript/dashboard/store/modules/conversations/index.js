@@ -380,6 +380,13 @@ export const mutations = {
     _state.copilotAssistant = data.assistant;
   },
 
+  [types.SET_CONVERSATION_PINNED_MESSAGES](_state, { id, data }) {
+    const chat = getConversationById(_state)(id);
+    if (chat) {
+      chat.pinnedMessages = data;
+    }
+  },
+
   [types.UPDATE_CONVERSATION_SUMMARY_STATUS](
     _state,
     { conversation_id: conversationId, status }

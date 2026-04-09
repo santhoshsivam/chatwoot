@@ -1,5 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
+import { messageStamp } from 'shared/helpers/timeHelper';
 
 defineProps({
   pinnedMessages: {
@@ -40,6 +41,19 @@ const { t } = useI18n();
         >
           <div class="flex items-start gap-3">
             <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <span
+                  v-if="message.sender"
+                  class="text-xs font-semibold truncate text-n-slate-12"
+                >
+                  {{ message.sender.name }}
+                </span>
+                <span
+                  class="text-[10px] text-n-slate-10 whitespace-nowrap ml-2"
+                >
+                  {{ messageStamp(message.created_at) }}
+                </span>
+              </div>
               <p class="text-sm text-n-slate-12 line-clamp-3">
                 {{ message.content }}
               </p>

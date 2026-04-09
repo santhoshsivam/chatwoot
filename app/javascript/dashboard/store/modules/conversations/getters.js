@@ -161,6 +161,11 @@ const getters = {
   getCopilotAssistant: _state => {
     return _state.copilotAssistant;
   },
+
+  getPinnedMessages: _state => {
+    const [chat] = getSelectedChatConversation(_state);
+    return chat?.pinnedMessages || [];
+  },
 };
 
 export default getters;
