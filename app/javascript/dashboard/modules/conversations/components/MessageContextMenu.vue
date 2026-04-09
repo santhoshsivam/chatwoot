@@ -126,7 +126,7 @@ export default {
       console.log('handleOpen called');
       this.$emit('open', e);
     },
-    handleClose(e) {
+    handleClose(e = null) {
       this.$emit('close', e);
     },
     handleTranslate() {
