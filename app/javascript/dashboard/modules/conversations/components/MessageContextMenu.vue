@@ -13,13 +13,14 @@ import {
 } from '../../../helper/AnalyticsHelper/events';
 import MenuItem from '../../../components/widgets/conversation/contextMenu/menuItem.vue';
 import { useTrack } from 'dashboard/composables';
-import NextButton from 'dashboard/components-next/button/Button.vue';
+import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 
 export default {
   components: {
     AddCannedModal,
     MenuItem,
     ContextMenu,
+    FluentIcon,
   },
   props: {
     message: {
