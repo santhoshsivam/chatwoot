@@ -255,9 +255,15 @@ export default {
       this.fetchSuggestions();
       this.messageSentSinceOpened = false;
     },
+    getMessages() {
+      if (this.pendingScrollToMessageId) {
+        this.onScrollToMessage({ messageId: this.pendingScrollToMessageId });
+      }
+    },
   },
 
   created() {
+    this.pendingScrollToMessageId = null;
     emitter.on(BUS_EVENTS.SCROLL_TO_MESSAGE, this.onScrollToMessage);
     // when a message is sent we set the flag to true this hides the label suggestions,
     // until the chat is changed and the flag is reset in the watch for currentChat
@@ -332,6 +338,18 @@ export default {
           this.isProgrammaticScroll = true;
           messageElement.scrollIntoView({ behavior: 'smooth' });
           this.fetchPreviousMessages();
+          this.pendingScrollToMessageId = null;
+
+          // Highlight the message by updating the route
+          this.$router.replace({
+            query: { ...this.$route.query, messageId },
+          });
+        } else if (messageId) {
+          this.pendingScrollToMessageId = messageId;
+          this.$store.dispatch('fetchMessagesAround', {
+            conversationId: this.currentChat.id,
+            messageId,
+          });
         } else {
           this.scrollToBottom();
         }

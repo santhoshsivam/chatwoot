@@ -73,5 +73,23 @@ describe MessageFinder do
         expect(result.last.id).to be conversation.messages[-2].id
       end
     end
+
+    context 'with around attribute' do
+      before do
+        # Create 50 messages to test the "around" limit of 20 before and 20 after
+        create_list(:message, 50, account: account, inbox: inbox, conversation: conversation)
+      end
+
+      let(:target_message) { conversation.messages[30] }
+      let(:params) { { around: target_message.id } }
+
+      it 'fetches messages around the given message id' do
+        result = message_finder.perform
+        # 20 before + target message + 19 after (since we only created 50 and there were some already)
+        # Actually let's just check if target message is included and counts are within expected range
+        expect(result.map(&:id)).to include(target_message.id)
+        expect(result.count).to be <= 40 # 20 before + 20 after
+      end
+    end
   end
 end

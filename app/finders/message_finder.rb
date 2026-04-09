@@ -21,7 +21,9 @@ class MessageFinder
   end
 
   def current_messages
-    if @params[:after].present? && @params[:before].present?
+    if @params[:around].present?
+      messages_around(@params[:around].to_i)
+    elsif @params[:after].present? && @params[:before].present?
       messages_between(@params[:after].to_i, @params[:before].to_i)
     elsif @params[:before].present?
       messages_before(@params[:before].to_i)
@@ -34,6 +36,13 @@ class MessageFinder
 
   def messages_after(after_id)
     messages.reorder('created_at asc').where('id > ?', after_id).limit(100)
+  end
+
+  def messages_around(around_id)
+    # Fetch 20 messages before and 20 messages after (including the message itself)
+    before = messages.where('id < ?', around_id).reorder('id desc').limit(20)
+    after = messages.where('id >= ?', around_id).reorder('id asc').limit(20)
+    (before.to_a + after.to_a).sort_by(&:created_at)
   end
 
   def messages_before(before_id)

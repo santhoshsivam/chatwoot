@@ -141,6 +141,14 @@ class ConversationApi extends ApiClient {
     return axios.get(`${this.url}/${conversationId}/pins`);
   }
 
+  getMessagesAround(conversationId, messageId) {
+    return axios.get(`${this.url}/${conversationId}/messages`, {
+      params: {
+        around: messageId,
+      },
+    });
+  }
+
   delete(conversationId) {
     return axios.delete(`${this.url}/${conversationId}`);
   }

@@ -540,6 +540,24 @@ const actions = {
     }
   },
 
+  fetchMessagesAround: async ({ commit }, { conversationId, messageId }) => {
+    try {
+      const {
+        data: { meta, payload },
+      } = await ConversationApi.getMessagesAround(conversationId, messageId);
+      commit(`conversationMetadata/${types.SET_CONVERSATION_METADATA}`, {
+        id: conversationId,
+        data: meta,
+      });
+      commit(types.SET_MISSING_MESSAGES, {
+        id: conversationId,
+        data: payload,
+      });
+    } catch (error) {
+      // Handle error
+    }
+  },
+
   updateSummaryStatus: ({ commit }, data) => {
     commit(types.UPDATE_CONVERSATION_SUMMARY_STATUS, data);
   },
