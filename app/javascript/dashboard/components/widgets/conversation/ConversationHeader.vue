@@ -159,17 +159,18 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
         class="hidden md:flex"
       />
       <v-dropdown :distance="12">
-        <div
+        <button
           v-if="chat.pinned_messages_count > 0"
           data-testid="pinned-messages-button"
-          class="flex items-center gap-1 px-2 py-1 transition-colors rounded-md cursor-pointer hover:bg-n-alpha-2 text-n-slate-11 hover:text-n-slate-12"
+          class="flex items-center gap-1 px-2 py-1 transition-colors rounded-md cursor-pointer hover:bg-n-alpha-2 text-n-slate-11 hover:text-n-slate-12 border-0 bg-transparent"
+          :aria-label="t('CONVERSATION.PINNED_MESSAGES.TITLE')"
           @click="fetchPinnedMessages"
         >
           <fluent-icon icon="pin" size="14" />
           <span class="text-xs font-medium">{{
             chat.pinned_messages_count
           }}</span>
-        </div>
+        </button>
         <template #popper>
           <div class="w-80 h-[400px]">
             <PinnedMessagesList :pinned-messages="pinnedMessages" />

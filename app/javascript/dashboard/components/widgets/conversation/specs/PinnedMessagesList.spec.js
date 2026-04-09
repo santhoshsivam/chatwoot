@@ -1,5 +1,13 @@
 import { shallowMount } from '@vue/test-utils';
 import PinnedMessagesList from '../PinnedMessagesList.vue';
+import { emitter } from 'shared/helpers/mitt';
+import { BUS_EVENTS } from 'shared/constants/busEvents';
+
+vi.mock('shared/helpers/mitt', () => ({
+  emitter: {
+    emit: vi.fn(),
+  },
+}));
 
 vi.mock('shared/helpers/timeHelper', () => ({
   messageStamp: vi.fn(time => time),
@@ -57,5 +65,43 @@ describe('PinnedMessagesList.vue', () => {
     expect(wrapper.find('[data-testid="pinned-messages-empty"]').exists()).toBe(
       true
     );
+  });
+
+  it('emits SCROLL_TO_MESSAGE event when a message is clicked', async () => {
+    const pinnedMessages = [
+      { id: 1, content: 'Message 1', created_at: 123, sender: { name: 'A1' } },
+    ];
+    const wrapper = shallowMount(PinnedMessagesList, {
+      props: { pinnedMessages },
+      global: {
+        stubs: { 'fluent-icon': true },
+        mocks: { $t: msg => msg },
+      },
+    });
+
+    await wrapper.find('[data-testid="pinned-message-item"]').trigger('click');
+    expect(emitter.emit).toHaveBeenCalledWith(BUS_EVENTS.SCROLL_TO_MESSAGE, {
+      messageId: 1,
+    });
+  });
+
+  it('emits SCROLL_TO_MESSAGE event when enter key is pressed', async () => {
+    const pinnedMessages = [
+      { id: 1, content: 'Message 1', created_at: 123, sender: { name: 'A1' } },
+    ];
+    const wrapper = shallowMount(PinnedMessagesList, {
+      props: { pinnedMessages },
+      global: {
+        stubs: { 'fluent-icon': true },
+        mocks: { $t: msg => msg },
+      },
+    });
+
+    await wrapper
+      .find('[data-testid="pinned-message-item"]')
+      .trigger('keydown.enter');
+    expect(emitter.emit).toHaveBeenCalledWith(BUS_EVENTS.SCROLL_TO_MESSAGE, {
+      messageId: 1,
+    });
   });
 });

@@ -1,6 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { messageStamp } from 'shared/helpers/timeHelper';
+import { emitter } from 'shared/helpers/mitt';
+import { BUS_EVENTS } from 'shared/constants/busEvents';
 
 defineProps({
   pinnedMessages: {
@@ -10,10 +12,18 @@ defineProps({
 });
 
 const { t } = useI18n();
+
+const scrollToMessage = messageId => {
+  emitter.emit(BUS_EVENTS.SCROLL_TO_MESSAGE, { messageId });
+};
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-n-surface-1">
+  <div
+    class="flex flex-col h-full bg-n-surface-1"
+    role="region"
+    :aria-label="t('CONVERSATION.PINNED_MESSAGES.TITLE')"
+  >
     <div
       class="flex items-center justify-between px-4 py-3 border-b border-n-weak"
     >
@@ -21,7 +31,7 @@ const { t } = useI18n();
         {{ t('CONVERSATION.PINNED_MESSAGES.TITLE') }}
       </h3>
     </div>
-    <div class="flex-1 overflow-y-auto">
+    <div class="flex-1 overflow-y-auto" role="list">
       <div
         v-if="pinnedMessages.length === 0"
         data-testid="pinned-messages-empty"
@@ -37,7 +47,13 @@ const { t } = useI18n();
           v-for="message in pinnedMessages"
           :key="message.id"
           data-testid="pinned-message-item"
-          class="p-4 transition-colors cursor-pointer hover:bg-n-alpha-2"
+          role="listitem"
+          tabindex="0"
+          class="p-4 transition-colors cursor-pointer hover:bg-n-alpha-2 focus:bg-n-alpha-2 outline-none"
+          :aria-label="`${message.sender?.name || ''}: ${message.content}`"
+          @click="scrollToMessage(message.id)"
+          @keydown.enter.prevent="scrollToMessage(message.id)"
+          @keydown.space.prevent="scrollToMessage(message.id)"
         >
           <div class="flex items-start gap-3">
             <div class="flex-1 min-w-0">
