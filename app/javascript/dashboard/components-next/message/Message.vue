@@ -585,7 +585,7 @@ provideMessageContext({
         :is-open="showContextMenu"
         :enabled-options="contextMenuEnabledOptions"
         :message="payloadForContextMenu"
-        @open="openContextMenu"
+        @open="openContextMenu($event)"
         @close="closeContextMenu"
         @reply-to="handleReplyTo"
       />
