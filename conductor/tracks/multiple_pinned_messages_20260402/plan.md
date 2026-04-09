@@ -18,11 +18,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: API & Frontend Integration (Pins List)' (Protocol in workflow.md) (4754af1)
 
 ## Phase 3: Navigation & Context Loading
-- [x] Task: Update the message list component to handle "scrolling to a specific message ID". (4754af1)
-- [x] Task: Implement a "Fetch Context" API endpoint to load messages around a specific message ID. (4754af1)
-- [x] Task: Integrate the "Fetch Context" logic into the frontend message loader. (4754af1)
-- [x] Task: Write tests for the context-loading logic (frontend and backend). (4754af1)
-- [x] Task: Add a "Highlight" effect when a message is scrolled into view from the pins list. (4754af1)
+- [x] Task: Update the message list component to handle "scrolling to a specific message ID". (c61a123)
+- [x] Task: Implement a "Fetch Context" API endpoint to load messages around a specific message ID. (c61a123)
+- [x] Task: Integrate the "Fetch Context" logic into the frontend message loader. (c61a123)
+- [x] Task: Write tests for the context-loading logic (frontend and backend). (c61a123)
+- [x] Task: Add a "Highlight" effect when a message is scrolled into view from the pins list. (c61a123)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Navigation & Context Loading' (Protocol in workflow.md)
 
 ## Phase 4: Final Polishing & Testing
