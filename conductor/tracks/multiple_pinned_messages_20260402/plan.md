@@ -23,7 +23,7 @@
 - [x] Task: Integrate the "Fetch Context" logic into the frontend message loader. (c61a123)
 - [x] Task: Write tests for the context-loading logic (frontend and backend). (c61a123)
 - [x] Task: Add a "Highlight" effect when a message is scrolled into view from the pins list. (c61a123)
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Navigation & Context Loading' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Navigation & Context Loading' (Protocol in workflow.md) (1983b1f)
 
 ## Phase 4: Final Polishing & Testing
 - [ ] Task: Perform end-to-end manual verification of the pinning/unpinning and navigation flow.
